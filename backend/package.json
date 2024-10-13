@@ -10,8 +10,13 @@
   "description": "",
   "dependencies": {
     "backend": "file:",
+    "body-parser": "^1.20.3",
+    "cors": "^2.8.5",
     "express": "^4.21.1",
     "sequelize": "^6.37.4",
     "sqlite3": "^5.1.7"
+  },
+  "devDependencies": {
+    "sequelize-cli": "^6.6.2"
   }
 }

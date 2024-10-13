@@ -2,61 +2,8 @@ const { DataTypes } = require("sequelize");
 const { sequelize } = require("../db");
 const { Class } = require("./class");
 
-const Student = sequelize.define("Student", {
-  name: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  dob: {
-    type: DataTypes.DATE,
-    allowNull: false,
-  },
-  gender_id: {
-    type: DataTypes.INTEGER,
-    references: {
-      model: Gender,
-      key: "id",
-    },
-  },
-  contact_id: {
-    type: DataTypes.INTEGER,
-    references: {
-      model: Contact,
-      key: "id",
-    },
-  },
-  guardian_id: {
-    type: DataTypes.INTEGER,
-    references: {
-      model: GuardianInfo,
-      key: "id",
-    },
-  },
-  university_id: {
-    type: DataTypes.INTEGER,
-    references: {
-      model: UniversityDetails,
-      key: "id",
-    },
-  },
-  addition_info_id: {
-    type: DataTypes.INTEGER,
-    references: {
-      model: AdditionalInfo,
-      key: "id",
-    },
-  },
-  class_id: {
-    type: DataTypes.INTEGER,
-    references: {
-      model: Class,
-      key: "id",
-    },
-  },
-});
-
 const Contact = sequelize.define("Contact", {
-  adderss: {
+  address: {
     type: DataTypes.STRING,
     allowNull: false,
   },
@@ -135,12 +82,70 @@ const AdditionalInfo = sequelize.define("AdditionalInfo", {
 });
 const Gender = sequelize.define("Gender", { gender: DataTypes.STRING });
 
+const Student = sequelize.define("Student", {
+  name: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  dob: {
+    type: DataTypes.DATE,
+    allowNull: false,
+  },
+  gender_id: {
+    type: DataTypes.INTEGER,
+    references: {
+      model: Gender,
+      key: "id",
+    },
+  },
+  contact_id: {
+    type: DataTypes.INTEGER,
+    references: {
+      model: Contact,
+      key: "id",
+    },
+  },
+  guardian_id: {
+    type: DataTypes.INTEGER,
+    references: {
+      model: GuardianInfo,
+      key: "id",
+    },
+  },
+  university_id: {
+    type: DataTypes.INTEGER,
+    references: {
+      model: UniversityDetails,
+      key: "id",
+    },
+  },
+  addition_info_id: {
+    type: DataTypes.INTEGER,
+    references: {
+      model: AdditionalInfo,
+      key: "id",
+    },
+  },
+  class_id: {
+    type: DataTypes.INTEGER,
+    references: {
+      model: Class,
+      key: "id",
+    },
+  },
+});
+
 const StudentRelations = () => {
-  Student.hasOne(Gender, {
+  Student.belongsTo(Contact, { foreignKey: "contact_id" });
+  Contact.hasOne(Student, { foreignKey: "contact_id" });
+
+  Student.belongsTo(Gender, {
+    foreignKey: "gender_id",
+  });
+  Gender.hasMany(Student, {
     foreignKey: "gender_id",
   });
 };
-
 module.exports = {
   Student,
   Contact,
