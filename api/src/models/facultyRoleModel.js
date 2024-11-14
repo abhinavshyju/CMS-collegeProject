@@ -1,11 +1,11 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../db");
 
-const RoleModel = sequelize.define("staff-role", {
+const FacultyRoleModel = sequelize.define("faculty-role", {
   role: {
     type: DataTypes.STRING,
     allowNull: false,
   },
 });
 
-module.exports = RoleModel;
+module.exports = FacultyRoleModel;

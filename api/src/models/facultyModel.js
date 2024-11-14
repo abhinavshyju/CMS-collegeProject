@@ -2,6 +2,7 @@ const { DataTypes } = require("sequelize");
 const sequelize = require("../db");
 const DepartmentModel = require("./departmentModel");
 const RoleModel = require("./RoleModel");
+const FacultyRoleModel = require("./facultyRoleModel");
 
 const FacultyModel = sequelize.define("faculty", {
   name: {
@@ -27,6 +28,13 @@ const FacultyModel = sequelize.define("faculty", {
     type: DataTypes.INTEGER,
     references: {
       model: DepartmentModel,
+      key: "id",
+    },
+  },
+  role_id: {
+    type: DataTypes.INTEGER,
+    references: {
+      model: FacultyRoleModel,
       key: "id",
     },
   },

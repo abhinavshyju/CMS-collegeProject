@@ -1,7 +1,8 @@
+const { DataTypes } = require("sequelize");
 const sequelize = require("../db");
 
 const EventModel = sequelize.define("event", {
-  titel: {
+  title: {
     type: DataTypes.STRING,
     allowNull: false,
   },
@@ -9,6 +10,11 @@ const EventModel = sequelize.define("event", {
     type: DataTypes.DATE,
     allowNull: false,
   },
+  description: {
+    type: DataTypes.JSON,
+    allowNull: false,
+  },
+
   published_by: {
     type: DataTypes.JSON,
     allowNull: false,

@@ -1,3 +1,4 @@
+const { DataTypes } = require("sequelize");
 const sequelize = require("../db");
 
 const UniversityDetailsModel = sequelize.define("university-info", {
@@ -19,6 +20,10 @@ const UniversityDetailsModel = sequelize.define("university-info", {
   },
   religion: {
     type: DataTypes.STRING,
+    allowNull: false,
+  },
+  addmission_no: {
+    type: DataTypes.INTEGER,
     allowNull: false,
   },
 });
