@@ -75,6 +75,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  get:
+    dependency: transitive
+    description:
+      name: get
+      sha256: e4e7335ede17452b391ed3b2ede016545706c01a02292a6c97619705e7d2a85e
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.6.6"
   leak_tracker:
     dependency: transitive
     description:
@@ -115,6 +123,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.12.16+1"
+  material3_layout:
+    dependency: "direct main"
+    description:
+      name: material3_layout
+      sha256: b9f086cf0c1f811ea479b5d4c0cb32c3ab39ae8d7e110d84d9c154bfe30a4154
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.7"
   material_color_utilities:
     dependency: transitive
     description:

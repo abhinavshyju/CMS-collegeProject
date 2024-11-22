@@ -2,9 +2,10 @@ const { DataTypes } = require("sequelize");
 const sequelize = require("../db");
 const ClassModel = require("./classModel");
 const FacultyModel = require("./facultyModel");
-const StudentModel = require("./stundentModel");
+
 const HourModel = require("./hourModel");
 const DateModel = require("./dateModel");
+const { TransactionStudentsModel } = require("./transactionModel");
 
 const AttendanceModel = sequelize.define("attendance", {
   time: {
@@ -46,7 +47,7 @@ const AttendanceModel = sequelize.define("attendance", {
   student_id: {
     type: DataTypes.INTEGER,
     references: {
-      model: StudentModel,
+      model: TransactionStudentsModel,
       key: "id",
     },
   },
