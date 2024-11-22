@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
           colorSchemeSeed: Colors.blue,
         ),
         themeMode: ThemeMode.system,
-        home: Scaffold(
+        home: const Scaffold(
           body: Text("data"),
         ));
   }
