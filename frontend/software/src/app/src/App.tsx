@@ -3,20 +3,30 @@ import "./App.css";
 import Login from "./pages/login";
 import Home from "./pages/home";
 import Layout from "./layout/layout";
+import AddStudents from "./pages/students/add-students";
+import ViewStudents from "./pages/students/view-students";
 
 function App() {
   const router = createBrowserRouter([
     {
-      path: "/",
+      path: "/asd",
       element: <Login />,
     },
     {
-      path: "/home",
+      path: "/",
       element: <Layout />,
       children: [
         {
           path: "",
           element: <Home />,
+        },
+        {
+          path: "/add-students",
+          element: <AddStudents />,
+        },
+        {
+          path: "/view-students",
+          element: <ViewStudents />,
         },
       ],
     },
