@@ -12,7 +12,7 @@ const createWindow = () => {
     minHeight: 600,
     minWidth: 720,
     height: 720,
-    width: 1080,
+    width: 1081,
 
     titleBarStyle: "hidden",
     titleBarOverlay: {
