@@ -1,5 +1,5 @@
-const { DataTypes } = require("sequelize");
-const sequelize = require("../db");
+import sequelize from "@/db";
+import { DataTypes } from "sequelize";
 
 const UniversityDetailsModel = sequelize.define("university-info", {
   cap_id: {
@@ -27,4 +27,4 @@ const UniversityDetailsModel = sequelize.define("university-info", {
     allowNull: false,
   },
 });
-module.exports = UniversityDetailsModel;
+export default UniversityDetailsModel;

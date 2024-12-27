@@ -1,3 +1,5 @@
+import { Request, Response } from "express";
+
 const { Router } = require("express");
 const AdminModel = require("../models/adminModel");
 const jwt = require("jsonwebtoken");
@@ -5,14 +7,14 @@ const FacultyModel = require("../models/facultyModel");
 const StaffModel = require("../models/staffModel");
 const StudentModel = require("../models/stundentModel");
 const UniversityDetailsModel = require("../models/universityDetailsModel");
-const router = Router();
+const AuthRouter = Router();
 
-router.get("/", (req, res) => {
+AuthRouter.get("/", (req: Request, res: Response) => {
   res.send("Auth route");
 });
 
 // Admin login
-router.post("/admin-login", async (req, res) => {
+AuthRouter.post("/admin-login", async (req: Request, res: Response) => {
   const { email, password } = req.body;
 
   try {
@@ -34,10 +36,10 @@ router.post("/admin-login", async (req, res) => {
           .status(200)
           .json({ messge: "Admin login successfully", token: token });
       } else {
-        res.status(401).json("Password not matched.");
+        res.status(404).json({ messge: "Password not matched." });
       }
     } else {
-      res.status(404).json("Admin not found.");
+      res.status(404).json({ massage: "Admin not found." });
     }
   } catch (error) {
     console.log(error);
@@ -45,8 +47,9 @@ router.post("/admin-login", async (req, res) => {
   }
 });
 
-router.post("/staff-login", async (req, res) => {
+AuthRouter.post("/staff-login", async (req: Request, res: Response) => {
   // staff login logic here
+  console.log(req.body);
   const { email, password } = req.body;
 
   try {
@@ -79,7 +82,7 @@ router.post("/staff-login", async (req, res) => {
   }
 });
 
-router.post("/faculty-login", async (req, res) => {
+AuthRouter.post("/faculty-login", async (req: Request, res: Response) => {
   // Faculty login logic here
   const { email, password } = req.body;
 
@@ -113,7 +116,7 @@ router.post("/faculty-login", async (req, res) => {
   }
 });
 
-router.post("/student-login", async (req, res) => {
+AuthRouter.post("/student-login", async (req: Request, res: Response) => {
   // Student login logic here
   const { addmission_no, dob } = req.body;
 
@@ -125,7 +128,7 @@ router.post("/student-login", async (req, res) => {
       include: UniversityDetailsModel,
     });
     if (result) {
-      if (result.password === password) {
+      if (result.password === dob) {
         const token = jwt.sign(
           {
             role: "student",
@@ -148,4 +151,4 @@ router.post("/student-login", async (req, res) => {
   }
 });
 
-module.exports = router;
+export default AuthRouter;

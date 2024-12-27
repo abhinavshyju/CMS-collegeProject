@@ -1,5 +1,5 @@
-const { DataTypes } = require("sequelize");
-const sequelize = require("../db");
+import sequelize from "@/db";
+import { DataTypes } from "sequelize";
 
 const FacultyRoleModel = sequelize.define("faculty-role", {
   role: {
@@ -8,4 +8,4 @@ const FacultyRoleModel = sequelize.define("faculty-role", {
   },
 });
 
-module.exports = FacultyRoleModel;
+export default FacultyRoleModel;

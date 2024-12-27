@@ -1,5 +1,5 @@
-const { DataTypes } = require("sequelize");
-const sequelize = require("../db");
+import sequelize from "@/db";
+import { DataTypes } from "sequelize";
 
 const AdminModel = sequelize.define("admin", {
   name: {

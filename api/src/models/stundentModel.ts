@@ -1,11 +1,11 @@
-const { DataTypes } = require("sequelize");
-const sequelize = require("../db");
-const AdditionalInfoModel = require("./additionInfoModel");
-const ContactModel = require("./contactModel");
-const GenderModel = require("./genderModel");
-const GuardianInfoModel = require("./guardianInfoModel");
-const UniversityDetailsModel = require("./universityDetailsModel");
-const ClassModel = require("./classModel");
+import sequelize from "@/db";
+import GenderModel from "./genderModel";
+import { DataTypes } from "sequelize";
+import ContactModel from "./contactModel";
+import GuardianInfoModel from "./guardianInfoModel";
+import UniversityDetailsModel from "./universityDetailsModel";
+import AdditionalInfoModel from "./additionInfoModel";
+import ClassModel from "./classModel";
 
 const StudentModel = sequelize.define("student", {
   name: {
@@ -60,4 +60,4 @@ const StudentModel = sequelize.define("student", {
   },
 });
 
-module.exports = StudentModel;
+export default StudentModel;

@@ -1,6 +1,6 @@
-const { DataTypes } = require("sequelize");
-const sequelize = require("../db");
-const DepartmentModel = require("./departmentModel");
+import sequelize from "@/db";
+import DepartmentModel from "./departmentModel";
+import { DataTypes } from "sequelize";
 
 const ClassModel = sequelize.define("class", {
   class: {
@@ -15,4 +15,4 @@ const ClassModel = sequelize.define("class", {
     },
   },
 });
-module.exports = ClassModel;
+export default ClassModel;

@@ -1,11 +1,11 @@
-const { DataTypes } = require("sequelize");
-const sequelize = require("../db");
-const ClassModel = require("./classModel");
-const FacultyModel = require("./facultyModel");
+import { DataTypes } from "sequelize";
+import sequelize from "../db";
+import ClassModel from "./classModel";
+import FacultyModel from "./facultyModel";
 
-const HourModel = require("./hourModel");
-const DateModel = require("./dateModel");
-const { TransactionStudentsModel } = require("./transactionModel");
+import HourModel from "./hourModel";
+import DateModel from "./dateModel";
+import { TransactionStudentsModel } from "./transactionModel";
 
 const AttendanceModel = sequelize.define("attendance", {
   time: {

@@ -1,5 +1,5 @@
-const { DataTypes } = require("sequelize");
-const sequelize = require("../db");
+import sequelize from "@/db";
+import { DataTypes } from "sequelize";
 
 const ContactModel = sequelize.define("contact", {
   address: {
@@ -16,4 +16,4 @@ const ContactModel = sequelize.define("contact", {
   },
 });
 
-module.exports = ContactModel;
+export default ContactModel;

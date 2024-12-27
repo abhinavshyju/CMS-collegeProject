@@ -1,5 +1,5 @@
-const { DataTypes } = require("sequelize");
-const sequelize = require("../db");
+import sequelize from "@/db";
+import { DataTypes } from "sequelize";
 
 const DepartmentModel = sequelize.define("department", {
   department: {
@@ -8,4 +8,4 @@ const DepartmentModel = sequelize.define("department", {
   },
 });
 
-module.exports = DepartmentModel;
+export default DepartmentModel;

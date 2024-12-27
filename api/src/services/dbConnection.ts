@@ -1,4 +1,4 @@
-const sequelize = require("../db");
+import sequelize from "@/db";
 
 const connectDB = async () => {
   try {
@@ -11,4 +11,4 @@ const connectDB = async () => {
   }
 };
 
-module.exports = connectDB;
+export default connectDB;

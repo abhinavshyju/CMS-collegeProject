@@ -10,69 +10,85 @@ const StudentModel = require("../models/stundentModel");
 const router = Router();
 
 router.post("/add-student", async (req, res) => {
+  // const {
+  //   name,
+  //   gender,
+  //   dob,
+  //   address,
+  //   email,
+  //   phone,
+  //   gname,
+  //   mothername,
+  //   gphone,
+  //   annuiincome,
+  //   cap_id,
+  //   doc_no,
+  //   nationality,
+  //   navity,
+  //   religion,
+  //   addmission_no,
+  //   ex_man,
+  //   disability,
+  //   nss,
+  //   agrade,
+  //   ihrdq,
+  //   _class,
+  // } = req.body;
+
+  console.log(req.body);
   const {
+    admissionNumber,
     name,
     gender,
-    dob,
-    address,
-    email,
-    phone,
-    gname,
-    mothername,
-    gphone,
-    annuiincome,
-    cap_id,
-    doc_no,
-    nationality,
-    navity,
-    religion,
-    addmission_no,
-    ex_man,
-    disability,
-    nss,
-    agrade,
-    ihrdq,
+    dateOfBirth,
+    contact,
+    guardianinfo,
+    universitydetails,
+    additionalinformation,
     _class,
+    parent,
   } = req.body;
 
   try {
     const guardianInfo = await GuardianInfoModel.create({
-      name: gname,
-      mother_name: mothername,
-      phone: gphone,
-      annual_income: annuiincome,
+      name: guardianinfo.name,
+      mother_name: guardianinfo.mother,
+      phone: guardianinfo.phone,
+      annual_income: guardianinfo.annualIncome,
     });
 
     const Contact = await ContactModel.create({
-      address: address,
-      email: email,
-      phone: phone,
+      address: contact.address,
+      email: contact.email,
+      phone: contact.phone,
     });
 
     const AdditionalInfo = await AdditionalInfoModel.create({
-      ex_service_man: ex_man,
-      disability_status: disability,
-      nss_volunteer: nss,
-      a_grade_insite: agrade,
-      ihrd_tss_quota: ihrdq,
+      ex_service_man: additionalinformation.exServiceman,
+      disability_status: additionalinformation.disabilityStatus,
+      nss_volunteer: additionalinformation.nssVolunteer,
+      a_grade_insite: additionalinformation.aGradeInSite,
+      ihrd_tss_quota: additionalinformation.ihrdTssQuota,
+    });
+    const Class = await ClassModel.findOne({ where: { class: _class } });
+    const Gender = await GenderModel.findOne({
+      where: {
+        gender: gender,
+      },
     });
 
-    const Gender = await GenderModel.findOne({ where: gender });
-
-    const Class = await ClassModel.findOne({ where: _class });
-
     const University = await UniversityDetailsModel.create({
-      cap_id: cap_id,
-      doc_no: doc_no,
-      nationality: nationality,
-      navity: navity,
-      religion: religion,
-      addmission_no: addmission_no,
+      cap_id: universitydetails.capId,
+      doc_no: universitydetails.docNo,
+      nationality: universitydetails.nationality,
+      navity: universitydetails.nativity,
+      religion: universitydetails.religion,
+      addmission_no: admissionNumber,
     });
 
     const Student = await StudentModel.create({
       name: name,
-      dob: dob,
+      dob: dateOfBirth,
       gender_id: Gender.id,
       contact_id: Contact.id,
       guardian_id: guardianInfo.id,
@@ -105,7 +121,23 @@ router.get("/student", async (req, res) => {
     if (!student) {
       res.status(404).json({ message: "Students not found" });
     }
-    res.status(200).json({ messgae: "Students found", data: student });
+
+    const result = [];
+    student.forEach((element) => {
+      const obj = {
+        id: element.id,
+        name: " ",
+        admissionNumber: " ",
+        class: "",
+        contact: "",
+      };
+      obj.name = element.name;
+      obj.admissionNumber = element["university-info"].addmission_no;
+      obj.class = element.class.class;
+      obj.contact = element.contact.phone;
+      result.push(obj);
+    });
+    res.status(200).json({ messgae: "Students found", data: result });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Internal server error" });
@@ -129,7 +161,8 @@ router.get("/student/:id", async (req, res) => {
     if (!student) {
       res.status(404).json({ message: "Student not found" });
     }
-    res.status(200).json({ messgae: "Student found", data: student });
+
+    res.status(200).json({ messgae: "Student found", data: student.data });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Internal server error" });

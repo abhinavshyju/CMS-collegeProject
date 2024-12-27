@@ -1,5 +1,5 @@
-const { DataTypes } = require("sequelize");
-const sequelize = require("../db");
+import sequelize from "@/db";
+import { DataTypes } from "sequelize";
 
 const AdditionalInfoModel = sequelize.define("additional-info", {
   ex_service_man: {
@@ -23,4 +23,4 @@ const AdditionalInfoModel = sequelize.define("additional-info", {
     allowNull: false,
   },
 });
-module.exports = AdditionalInfoModel;
+export default AdditionalInfoModel;

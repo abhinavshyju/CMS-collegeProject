@@ -1,8 +1,7 @@
-const { DataTypes } = require("sequelize");
-const sequelize = require("../db");
-const DepartmentModel = require("./departmentModel");
-const RoleModel = require("./RoleModel");
-const FacultyRoleModel = require("./facultyRoleModel");
+import sequelize from "@/db";
+import { DataTypes } from "sequelize";
+import FacultyRoleModel from "./facultyRoleModel";
+import DepartmentModel from "./departmentModel";
 
 const FacultyModel = sequelize.define("faculty", {
   name: {
@@ -20,7 +19,7 @@ const FacultyModel = sequelize.define("faculty", {
   role_id: {
     type: DataTypes.INTEGER,
     references: {
-      model: RoleModel,
+      model: FacultyRoleModel,
       key: "id",
     },
   },
@@ -31,13 +30,6 @@ const FacultyModel = sequelize.define("faculty", {
       key: "id",
     },
   },
-  role_id: {
-    type: DataTypes.INTEGER,
-    references: {
-      model: FacultyRoleModel,
-      key: "id",
-    },
-  },
 });
 
-module.exports = FacultyModel;
+export default FacultyModel;

@@ -1,5 +1,5 @@
-const { DataTypes } = require("sequelize");
-const sequelize = require("../db");
+import sequelize from "@/db";
+import { DataTypes } from "sequelize";
 
 const GuardianInfoModel = sequelize.define("guardian-info", {
   name: {
@@ -20,4 +20,4 @@ const GuardianInfoModel = sequelize.define("guardian-info", {
   },
 });
 
-module.exports = GuardianInfoModel;
+export default GuardianInfoModel;
