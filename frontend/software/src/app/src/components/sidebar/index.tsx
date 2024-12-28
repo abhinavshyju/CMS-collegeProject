@@ -61,12 +61,12 @@ export function MainSidebar() {
               <SidebarMenuSub>
                 <SidebarMenuSubItem>
                   <SidebarMenuSubButton asChild>
-                    <Link to="/add-students">Add Students</Link>
+                    <Link to="/dashboard/add-students">Add Students</Link>
                   </SidebarMenuSubButton>
                 </SidebarMenuSubItem>
                 <SidebarMenuSubItem>
                   <SidebarMenuSubButton asChild>
-                    <Link to="/view-students">View Students</Link>
+                    <Link to="/dashboard/view-students">View Students</Link>
                   </SidebarMenuSubButton>
                 </SidebarMenuSubItem>
               </SidebarMenuSub>
@@ -83,9 +83,7 @@ export function MainSidebar() {
         </SidebarMenu>
       </SidebarContent>
       <SidebarFooter>
-        {/* <p className="text-xs text-gray-500 px-4 py-2">
-          {state === "expanded" ? "© 2024 My App" : "© 2024"}
-        </p> */}
+        <Link to="/login">Logout</Link>
       </SidebarFooter>
     </Sidebar>
   );

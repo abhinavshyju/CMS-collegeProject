@@ -1,5 +1,4 @@
 import { AdmissionForm } from "@/components/form/admisson-form";
-import { Card } from "@/components/ui/card";
 
 const AddStudents = () => {
   return (

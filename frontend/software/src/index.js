@@ -20,16 +20,20 @@ const createWindow = () => {
     },
 
     webPreferences: {
+      contextIsolation: true, // Enables context isolation
+      enableRemoteModule: false, // Disables the remote module
+      nodeIntegration: false, // Disables Node.js integration in the renderer
+      sandbox: true,
       preload: path.join(__dirname, "preload.js"),
     },
   });
 
   // and load the index.html of the app.
   // mainWindow.loadFile(path.join(__dirname, 'index.html'));
-  mainWindow.loadURL("http://localhost:5174/");
+  mainWindow.loadURL("http://localhost:5173/");
 
   // Open the DevTools.
-  // mainWindow.webContents.openDevTools();
+  mainWindow.webContents.openDevTools();
   mainWindow.setMenuBarVisibility(false);
 };
 
