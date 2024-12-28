@@ -58,6 +58,10 @@ const StudentModel = sequelize.define("student", {
       key: "id",
     },
   },
+  admission_date: {
+    type: DataTypes.DATEONLY,
+    allowNull: false,
+  },
 });
 
 export default StudentModel;

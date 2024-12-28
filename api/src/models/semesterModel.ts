@@ -1,5 +1,5 @@
-const { DataTypes } = require("sequelize");
-const sequelize = require("../db");
+import sequelize from "@/db";
+import { DataTypes } from "sequelize";
 
 export const SemesterModel = sequelize.define("semester", {
   name: {
@@ -7,3 +7,4 @@ export const SemesterModel = sequelize.define("semester", {
     allowNull: false,
   },
 });
+export default SemesterModel;

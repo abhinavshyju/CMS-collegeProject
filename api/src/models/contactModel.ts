@@ -9,6 +9,7 @@ const ContactModel = sequelize.define("contact", {
   email: {
     type: DataTypes.STRING,
     allowNull: false,
+    unique: true,
   },
   phone: {
     type: DataTypes.INTEGER,

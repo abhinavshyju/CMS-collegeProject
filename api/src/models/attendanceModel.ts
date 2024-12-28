@@ -1,56 +1,54 @@
-import { DataTypes } from "sequelize";
-import sequelize from "../db";
-import ClassModel from "./classModel";
+import sequelize from "@/db";
+import { DataTypes, ModelDefined, Optional } from "sequelize";
+import StudentModel from "./stundentModel";
 import FacultyModel from "./facultyModel";
-
-import HourModel from "./hourModel";
-import DateModel from "./dateModel";
+import AttendanceDateModel from "./attendanceDateModel";
 import { TransactionStudentsModel } from "./transactionModel";
 
-const AttendanceModel = sequelize.define("attendance", {
-  time: {
-    type: DataTypes.TIME,
-    allowNull: false,
-  },
-  status: {
-    type: DataTypes.BOOLEAN,
-    allowNull: false,
-  },
-  hour_id: {
-    type: DataTypes.INTEGER,
-    references: {
-      model: HourModel,
-      key: "id",
-    },
-  },
-  data_id: {
-    type: DataTypes.INTEGER,
-    references: {
-      model: DateModel,
-      key: "id",
-    },
-  },
-  class: {
-    type: DataTypes.INTEGER,
-    references: {
-      model: ClassModel,
-      key: "id",
-    },
-  },
-  faculty_id: {
-    type: DataTypes.INTEGER,
-    references: {
-      model: FacultyModel,
-      key: "id",
-    },
-  },
-  student_id: {
-    type: DataTypes.INTEGER,
-    references: {
-      model: TransactionStudentsModel,
-      key: "id",
-    },
-  },
-});
+interface attendance {
+  id?: number;
+  student_id: number;
+  faculty_id: number;
+  hour: number;
+  date_id: number;
+  status: boolean;
+}
 
-module.exports = AttendanceModel;
+type attendanceCreationAttributes = Optional<attendance, "id">;
+const AttendanceModel: ModelDefined<attendanceCreationAttributes, attendance> =
+  sequelize.define("attendance", {
+    trasaction_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: TransactionStudentsModel,
+        key: "id",
+      },
+    },
+    faculty_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: FacultyModel,
+        key: "id",
+      },
+    },
+    hour: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    date_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: AttendanceDateModel,
+        key: "id",
+      },
+    },
+    status: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+    },
+  });
+
+export default AttendanceModel;

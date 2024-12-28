@@ -1,5 +1,5 @@
 import AdditionalInfoModel from "./additionInfoModel";
-import AttendanceModel from "./attendaceModel";
+import AttendanceModel from "./attendanceModel";
 import AttendanceDateModel from "./attendanceDateModel";
 import ClassModel from "./classModel";
 import ContactModel from "./contactModel";

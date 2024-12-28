@@ -8,7 +8,8 @@ import RelationsJoin from "./src/models/relations";
 import adminRoute from "./src/routes/adminRoute/index";
 import AuthRouter from "./src/routes/authRoute";
 import AttendanceRouter from "./src/routes/attendanceRoute";
-
+import StaffRouter from "./src/routes/staffRoute";
+import SemesterRouter from "./src/routes/semesterRoute";
 // const bodyParser = require("body-parser");
 const express = require("express");
 const app = express();
@@ -49,12 +50,14 @@ app.get("/", (req: Request, res: Response) => res.send("Hello World!"));
 // app.use("/auth", authRoute);
 app.use("/admin", adminRoute);
 app.use("/auth", AuthRouter);
-// app.use("/staff", staffRoute);
+
+app.use("/staff", StaffRouter);
 // app.use("/event", eventRoute);
 
 // * Attendance Route
 
 app.use("/attendance", AttendanceRouter);
+app.use("/sem", SemesterRouter);
 
 // app.use("/test", testRoute);
 
