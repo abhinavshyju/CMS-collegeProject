@@ -5,8 +5,8 @@ import {
   BookOpen,
   GraduationCap,
   Users,
-  Calendar,
   ClipboardList,
+  Building,
   Settings,
   BarChart,
 } from "lucide-react";
@@ -16,8 +16,8 @@ const sidebarItems = [
   { icon: GraduationCap, label: "Students", href: "/students" },
   { icon: Users, label: "Faculty", href: "/dashboard/faculty" },
   { icon: Users, label: "Staff", href: "/dashboard/staff" },
-  { icon: Calendar, label: "Schedule", href: "/schedule" },
-  { icon: ClipboardList, label: "Grades", href: "/grades" },
+  { icon: Building, label: "Departments", href: "/dashboard/department" },
+  { icon: ClipboardList, label: "Class", href: "/dashboard/class" },
   { icon: BarChart, label: "Reports", href: "/reports" },
   { icon: Settings, label: "Settings", href: "/settings" },
 ];

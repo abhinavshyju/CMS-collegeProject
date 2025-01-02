@@ -6,6 +6,8 @@ import { MainLayout } from "./layout";
 import StaffPage from "./page/staff/index.";
 
 import LoginPage from "./page/login";
+import DepartmentPage from "./page/department";
+import ClassPage from "./page/class";
 
 function App() {
   const route = createBrowserRouter([
@@ -21,6 +23,14 @@ function App() {
       path: "/dashboard",
       element: <MainLayout />,
       children: [
+        {
+          path: "/dashboard/class",
+          element: <ClassPage />,
+        },
+        {
+          path: "/dashboard/department",
+          element: <DepartmentPage />,
+        },
         {
           path: "/dashboard/faculty",
           element: <FacultyPage />,

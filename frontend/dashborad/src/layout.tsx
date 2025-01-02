@@ -1,6 +1,7 @@
 import { Outlet, useNavigate } from "react-router-dom";
 import { Sidebar } from "./components/sidebar";
 import { useEffect } from "react";
+import { Toaster } from "./components/ui/toaster";
 
 export function MainLayout() {
   const navigate = useNavigate();
@@ -23,6 +24,7 @@ export function MainLayout() {
           <Outlet />
         </main>
       </div>
+      <Toaster />
     </div>
   );
 }
