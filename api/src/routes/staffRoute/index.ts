@@ -1,11 +1,12 @@
 import sequelize from "@/db";
-import AdditionalInfoModel from "@/models/additionInfoModel";
-import ClassModel from "@/models/classModel";
-import ContactModel from "@/models/contactModel";
-import GenderModel from "@/models/genderModel";
-import GuardianInfoModel from "@/models/guardianInfoModel";
-import StudentModel from "@/models/stundentModel";
-import UniversityDetailsModel from "@/models/universityDetailsModel";
+import {
+  AdditionalInfo,
+  Class,
+  Contact,
+  GuardianInfo,
+  Student,
+  UniversityDetail,
+} from "@/models";
 import { Request, Response } from "express";
 
 const { Router } = require("express");
@@ -30,83 +31,55 @@ StaffRouter.post("/add-student", async (req: Request, res: Response) => {
   const transaction = await sequelize.transaction();
 
   try {
-    const guardianInfo = await GuardianInfoModel.create(
-      {
-        name: guardianinfo.name,
-        mother_name: guardianinfo.mother,
-        phone: guardianinfo.phone,
-        annual_income: guardianinfo.annualIncome,
-      },
-      { transaction }
-    );
-
-    const Contact = await ContactModel.create(
-      {
-        address: contact.address,
-        email: contact.email,
-        phone: contact.phone,
-      },
-      { transaction }
-    );
-
-    const AdditionalInfo = await AdditionalInfoModel.create(
-      {
-        ex_service_man: additionalinformation.exServiceman,
-        disability_status: additionalinformation.disabilityStatus,
-        nss_volunteer: additionalinformation.nssVolunteer,
-        a_grade_insite: additionalinformation.aGradeInSite,
-        ihrd_tss_quota: additionalinformation.ihrdTssQuota,
-      },
-      { transaction }
-    );
-
-    const Class = await ClassModel.findOne({
-      where: { class: _class },
-      transaction,
+    const student = await Student.create({
+      gender: gender,
+      admissionNo: admissionNumber,
+      name: name,
+      admissionYear: admission_date,
+      dob: dateOfBirth,
     });
+    const guardianInfo = await GuardianInfo.create({
+      name: guardianinfo.name,
+      mottherName: guardianinfo.mother,
+      phone: guardianinfo.phone,
+      annualIncome: guardianinfo.annualIncome,
+    });
+    await guardianInfo.setStudent(student);
 
-    const Gender: any = await GenderModel.findOne({
+    const contactInfo = await Contact.create({
+      address: contact.address,
+      email: contact.email,
+      phone: contact.phone,
+    });
+    await contactInfo.setStudent(student);
+
+    const additionalInfo = await AdditionalInfo.create({
+      exService: additionalinformation.exServiceman,
+      disability: additionalinformation.disabilityStatus,
+      nssVol: additionalinformation.nssVolunteer,
+      aGrade: additionalinformation.aGradeInSite,
+      ihrdtss: additionalinformation.ihrdTssQuota,
+    });
+    await additionalInfo.setStudent(student);
+
+    const University = await universitydetails.create({
+      cap_id: universitydetails.capId,
+      doc_no: universitydetails.docNo,
+      nationality: universitydetails.nationality,
+      navity: universitydetails.nativity,
+      religion: universitydetails.religion,
+      addmission_no: admissionNumber,
+    });
+    await University.setStudent(student);
+    const classInfo = await Class.findOne({
       where: {
-        gender: gender,
+        id: _class,
       },
-      transaction,
     });
-
-    if (!Gender) {
-      await transaction.rollback();
-      return res.status(404).json({ message: "Gender not found" });
+    if (!classInfo) {
+      return res.status(404).json({ message: "Class not found" });
     }
-
-    const University = await UniversityDetailsModel.create(
-      {
-        cap_id: universitydetails.capId,
-        doc_no: universitydetails.docNo,
-        nationality: universitydetails.nationality,
-        navity: universitydetails.nativity,
-        religion: universitydetails.religion,
-        addmission_no: admissionNumber,
-      },
-      { transaction }
-    );
-
-    const Student = await StudentModel.create(
-      {
-        name: name,
-        dob: dateOfBirth,
-        gender_id: Gender.id,
-        contact_id: Contact.dataValues.id,
-        guardian_id: guardianInfo.dataValues.id,
-        university_id: University.dataValues.id,
-        addition_info_id: AdditionalInfo.dataValues.id,
-        class_id: Class?.dataValues.id,
-        admission_date: admission_date,
-      },
-      { transaction }
-    );
-
-    console.log("Student is created : " + Student.dataValues.id);
-
-    await transaction.commit(); // Commit the transaction if everything is successful
+    await student.setClass(classInfo);
     res
       .status(201)
       .json({ message: "Student created successfully", data: Student });
@@ -119,15 +92,8 @@ StaffRouter.post("/add-student", async (req: Request, res: Response) => {
 
 StaffRouter.get("/student", async (req: Request, res: Response) => {
   try {
-    const student = await StudentModel.findAll({
-      include: [
-        GenderModel,
-        ContactModel,
-        GuardianInfoModel,
-        UniversityDetailsModel,
-        AdditionalInfoModel,
-        ClassModel,
-      ],
+    const student = await Student.findAll({
+      include: [Class, Contact, GuardianInfo, UniversityDetail, AdditionalInfo],
     });
     if (!student) {
       res.status(404).json({ message: "Students not found" });
@@ -159,18 +125,17 @@ StaffRouter.get("/student/:id", async (req: Request, res: Response) => {
   try {
     const id = req.params.id;
     console.log("test");
-    const student = await StudentModel.findOne({
+    const student = await Student.findOne({
       where: { id: id },
-      attributes: ["id", "name"],
+      attributes: ["id", "name", "gender"],
       include: [
-        { model: GenderModel, attributes: ["gender"] },
-        { model: ContactModel, attributes: ["address", "email", "phone"] },
+        { model: Contact, attributes: ["address", "email", "phone"] },
         {
-          model: GuardianInfoModel,
+          model: GuardianInfo,
           attributes: ["name", "mother_name", "phone", "annual_income"],
         },
         {
-          model: UniversityDetailsModel,
+          model: UniversityDetail,
           attributes: [
             "addmission_no",
             "cap_id",
@@ -180,8 +145,8 @@ StaffRouter.get("/student/:id", async (req: Request, res: Response) => {
             "religion",
           ],
         },
-        AdditionalInfoModel,
-        ClassModel,
+        AdditionalInfo,
+        Class,
       ],
     });
     if (!student) {

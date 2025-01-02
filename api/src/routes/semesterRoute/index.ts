@@ -1,6 +1,4 @@
-import TransactionSemesterModel from "@/models/semesterTransactionModel";
-import StudentModel from "@/models/stundentModel";
-import TransactionStudentsModel from "@/models/transactionModel";
+import { Semester, SemesterTransaction } from "@/models";
 import internalServerError from "@/utils/error";
 import { Request, Response } from "express";
 
@@ -9,37 +7,23 @@ const SemesterRouter = require("express").Router();
 SemesterRouter.post("/setSemester", async (req: Request, res: Response) => {
   try {
     const { semester_id, start_date, end_date, admission_date } = req.body;
-    const semester = await TransactionSemesterModel.create({
-      semester_id,
-      start_date,
-      end_date,
-      admission_date,
-    });
-    const students = await StudentModel.findAll({
+    const semster = await Semester.findOne({
       where: {
-        admission_date: admission_date,
+        id: semester_id,
       },
     });
-    interface data {
-      student_id: number;
-      semester_id: number;
+    if (!semster) {
+      return res.status(404).json({ message: "Semester not found" });
     }
-    //   * For creating the transaction
-    const insertData: data[] = [];
-    students.forEach((student) => {
-      insertData.push({
-        student_id: student.dataValues.id,
-        semester_id: semester.dataValues.id,
-      });
+    const result = await SemesterTransaction.create({
+      admissionYear: admission_date,
+      startDate: start_date,
+      endDate: end_date,
     });
-
-    const transaction = await TransactionStudentsModel.bulkCreate(
-      insertData as any
-    );
-    res.status(200).json({
-      message: "Semester created successfully",
-      data: transaction,
-    });
+    await result.setSemester(semster);
+    res
+      .status(201)
+      .json({ message: "Semester set successfully.", data: result });
   } catch (error) {
     console.log(error);
     internalServerError(res);

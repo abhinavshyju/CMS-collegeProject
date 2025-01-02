@@ -5,6 +5,9 @@
   "scripts": {
     "start": "node dist/app.js",
     "build": "tsc",
+    "db:migrate": "sequelize db:migrate",
+    "db:rollback": "sequelize db:migrate:undo",
+    "db:rollback:all": "sequelize db:migrate:undo:all",
     "dev": "ts-node-dev ./app.ts --respawn --transpileOnly"
   },
   "dependencies": {

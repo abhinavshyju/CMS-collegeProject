@@ -1,12 +1,9 @@
+import { Admin, Staff, Student } from "@/models";
 import { Request, Response } from "express";
 
 const { Router } = require("express");
-const AdminModel = require("../models/adminModel");
 const jwt = require("jsonwebtoken");
-const FacultyModel = require("../models/facultyModel");
-const StaffModel = require("../models/staffModel");
-const StudentModel = require("../models/stundentModel");
-const UniversityDetailsModel = require("../models/universityDetailsModel");
+
 const AuthRouter = Router();
 
 AuthRouter.get("/", (req: Request, res: Response) => {
@@ -18,7 +15,7 @@ AuthRouter.post("/admin-login", async (req: Request, res: Response) => {
   const { email, password } = req.body;
 
   try {
-    const result = await AdminModel.findOne({
+    const result = await Admin.findOne({
       where: {
         email: email,
       },
@@ -53,7 +50,7 @@ AuthRouter.post("/staff-login", async (req: Request, res: Response) => {
   const { email, password } = req.body;
 
   try {
-    const result = await StaffModel.findOne({
+    const result = await Staff.findOne({
       where: {
         email: email,
       },
@@ -87,7 +84,7 @@ AuthRouter.post("/faculty-login", async (req: Request, res: Response) => {
   const { email, password } = req.body;
 
   try {
-    const result = await FacultyModel.findOne({
+    const result = await Staff.findOne({
       where: {
         email: email,
       },
@@ -121,18 +118,17 @@ AuthRouter.post("/student-login", async (req: Request, res: Response) => {
   const { addmission_no, dob } = req.body;
 
   try {
-    const result = await StudentModel.findOne({
+    const result = await Student.findOne({
       where: {
         dob: dob,
       },
-      include: UniversityDetailsModel,
     });
     if (result) {
-      if (result.password === dob) {
+      if (result.dob === dob) {
         const token = jwt.sign(
           {
             role: "student",
-            email: result["email"],
+            admissionNo: result.admissionNo,
           },
           process.env.JWTKEY
         );

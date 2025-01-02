@@ -1,51 +1,70 @@
-import AttendanceModel from "@/models/attendanceModel";
-import AttendanceDateModel from "@/models/attendanceDateModel";
-import ClassModel from "@/models/classModel";
-import FacultyModel from "@/models/facultyModel";
-import StudentModel from "@/models/stundentModel";
+import { Attendance, Faculty, StudentTransaction, WorkingDay } from "@/models";
 import internalServerError from "@/utils/error";
 import { Request, Response } from "express";
 
 const AttendanceRouter = require("express").Router();
 
 AttendanceRouter.post("/", async (req: Request, res: Response) => {
+  interface AttendanceDataType {
+    transaction_id: number;
+    status: boolean;
+  }
+
   const { attendancedata, date, hour, faculty_id } = req.body;
 
-  let attendanceDate: any;
   try {
-    attendanceDate = await AttendanceDateModel.findOrCreate({
+    if (!Array.isArray(attendancedata)) {
+      return res
+        .status(400)
+        .json({ message: "Invalid attendance data format" });
+    }
+
+    const [attendanceDate] = await WorkingDay.findOrCreate({
+      where: { date: date },
+    });
+
+    const faculty = await Faculty.findOne({
+      where: { id: faculty_id },
+    });
+
+    if (!faculty) {
+      return res.status(404).json({ message: "Faculty not found" });
+    }
+
+    const transactionIds = attendancedata.map((data) => data.transaction_id);
+    const transactions = await StudentTransaction.findAll({
       where: {
-        date: date,
+        id: transactionIds,
       },
     });
+
+    if (transactions.length !== transactionIds.length) {
+      return res.status(404).json({
+        message: "Some transactions are not found",
+      });
+    }
+
+    const transactionMap = new Map(
+      transactions.map((transaction) => [transaction.id, transaction])
+    );
+
+    const attendanceEntries = attendancedata.map((data) => ({
+      hour: hour,
+      status: data.status,
+      FacultyId: faculty.id,
+      WorkingDayId: attendanceDate.id,
+      StudentTransactionId: transactionMap.get(data.transaction_id)?.id,
+    }));
+
+    const createdRecords = await Attendance.bulkCreate(attendanceEntries);
+
+    res.status(201).json({
+      message: "Attendance created successfully",
+      data: createdRecords,
+    });
   } catch (error) {
+    console.error("Error creating attendance:", error);
     internalServerError(res);
-  }
-
-  interface Data {
-    student_id: number;
-    status: boolean;
-    faculty_id: number;
-    date_id: number;
-    hour: number;
-  }
-
-  const DataToInsert: Data[] = attendancedata.map(
-    (item: { student_id: number; status: boolean }) => ({
-      student_id: item.student_id,
-      status: item.status,
-      faculty_id,
-      date_id: attendanceDate[0].id,
-      hour,
-    })
-  );
-
-  try {
-    await AttendanceModel.bulkCreate(DataToInsert);
-    res.status(201).json({ message: "Attendance created successfully" });
-  } catch (error) {
-    console.error("Error in creating attendance:", error);
-    res.status(500).json({ message: "Error in creating attendance" });
   }
 });
 
@@ -69,8 +88,8 @@ AttendanceRouter.get("/", async (req: Request, res: Response) => {
 
   try {
     // Fetch all the students with their attendance and associated faculties and dates
-    const result = await StudentModel.findAll({
-      attributes: ["name"],
+    const result = await .findAll({
+      attributes: ["student_id"],
       include: [
         {
           model: ClassModel,
