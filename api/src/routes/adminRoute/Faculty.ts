@@ -1,36 +1,26 @@
-import FacultyModel from "@/models/facultyModel";
-import FacultyRoleModel from "@/models/facultyRoleModel";
+import { Department, Faculty, FacultyRole } from "@/models";
 import internalServerError from "@/utils/error";
 import { Request, Response } from "express";
 
 const router = require("express").Router();
 
-interface faculty {
+interface facultyType {
   id: number;
   name: string;
   email: string;
   role: string;
+  department: string;
 }
 
 router.post("/", async (req: Request, res: Response) => {
   try {
-    const { name, email, password, role } = req.body;
-
-    const faculty_role = await FacultyRoleModel.findOne({
-      where: {
-        role: role,
-      },
-    });
-
-    //  todo : change the id of role
-    const roleId = faculty_role?.dataValues.id;
-    console.log(roleId);
-
-    const faculty = await FacultyModel.create({
+    const { name, email, password, role_id, department_id } = req.body;
+    const faculty = await Faculty.create({
       name: name,
       email: email,
       password: password,
-      role_id: 1,
+      departmentId: department_id,
+      facultyRoleId: role_id,
     });
     res
       .status(201)
@@ -43,20 +33,31 @@ router.post("/", async (req: Request, res: Response) => {
 
 router.get("/", async (req: Request, res: Response) => {
   try {
-    const faculty = await FacultyModel.findAll({
-      include: FacultyRoleModel,
+    const faculty = await Faculty.findAll({
+      include: [
+        {
+          model: FacultyRole,
+          as: "facultyRole",
+        },
+        {
+          model: Department,
+          as: "department",
+        },
+      ],
     });
 
-    if (!faculty) {
-      res.status(404).json({ message: "Faculties are not found" });
+    if (faculty.length === 0) {
+      return res.status(404).json({ message: "Faculties are not found" });
     }
-    const result: faculty[] = [];
+
+    const result: facultyType[] = [];
     faculty.forEach((item: any) => {
       const obj = {
         id: item.id,
         name: item.name,
         email: item.email,
-        role: item["faculty-role"].role,
+        role: item.facultyRole.role,
+        department: item.department.department,
       };
       result.push(obj);
     });
@@ -71,7 +72,7 @@ router.get("/", async (req: Request, res: Response) => {
 router.patch("/:id", async (req: Request, res: Response) => {
   try {
     const id = req.params.id;
-    const result = await FacultyModel.update(req.body, {
+    const result = await Faculty.update(req.body, {
       where: {
         id: id,
       },

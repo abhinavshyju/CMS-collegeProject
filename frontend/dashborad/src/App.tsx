@@ -8,6 +8,7 @@ import StaffPage from "./page/staff/index.";
 import LoginPage from "./page/login";
 import DepartmentPage from "./page/department";
 import ClassPage from "./page/class";
+import UtilPage from "./page/uitls";
 
 function App() {
   const route = createBrowserRouter([
@@ -38,6 +39,10 @@ function App() {
         {
           path: "/dashboard/staff",
           element: <StaffPage />,
+        },
+        {
+          path: "/dashboard/utils",
+          element: <UtilPage />,
         },
       ],
     },

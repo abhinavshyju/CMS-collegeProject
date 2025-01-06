@@ -1,10 +1,10 @@
 import {
   Association,
+  BelongsToGetAssociationMixin,
+  BelongsToSetAssociationMixin,
+  BelongsToCreateAssociationMixin,
   CreationOptional,
   DataTypes,
-  HasOneGetAssociationMixin,
-  HasOneSetAssociationMixin,
-  HasOneCreateAssociationMixin,
   InferCreationAttributes,
   InferAttributes,
   Model,
@@ -24,22 +24,22 @@ export class Faculty extends Model<
   declare name: string | null
   declare email: string | null
   declare password: string | null
-  declare roleId: number | null
-  declare departmentId: number | null
+  declare facultyRoleId: number | null
+  declare departmentId: string | null
   declare createdAt: CreationOptional<Date>
   declare updatedAt: CreationOptional<Date>
 
-  // Faculty hasOne FacultyRole
+  // Faculty belongsTo FacultyRole
   declare facultyRole?: NonAttribute<FacultyRole>
-  declare getFacultyRole: HasOneGetAssociationMixin<FacultyRole>
-  declare setFacultyRole: HasOneSetAssociationMixin<FacultyRole, number>
-  declare createFacultyRole: HasOneCreateAssociationMixin<FacultyRole>
+  declare getFacultyRole: BelongsToGetAssociationMixin<FacultyRole>
+  declare setFacultyRole: BelongsToSetAssociationMixin<FacultyRole, number>
+  declare createFacultyRole: BelongsToCreateAssociationMixin<FacultyRole>
   
-  // Faculty hasOne Department
+  // Faculty belongsTo Department
   declare department?: NonAttribute<Department>
-  declare getDepartment: HasOneGetAssociationMixin<Department>
-  declare setDepartment: HasOneSetAssociationMixin<Department, number>
-  declare createDepartment: HasOneCreateAssociationMixin<Department>
+  declare getDepartment: BelongsToGetAssociationMixin<Department>
+  declare setDepartment: BelongsToSetAssociationMixin<Department, number>
+  declare createDepartment: BelongsToCreateAssociationMixin<Department>
   
   declare static associations: {
     facultyRole: Association<Faculty, FacultyRole>,
@@ -63,11 +63,11 @@ export class Faculty extends Model<
       password: {
         type: DataTypes.STRING
       },
-      roleId: {
+      facultyRoleId: {
         type: DataTypes.INTEGER
       },
       departmentId: {
-        type: DataTypes.INTEGER
+        type: DataTypes.STRING
       },
       createdAt: {
         type: DataTypes.DATE

@@ -7,13 +7,11 @@ import {
   Student,
   UniversityDetail,
 } from "@/models";
-import { Request, Response } from "express";
+import express, { Request, Response, Router } from "express";
 
-const { Router } = require("express");
+const StaffRouter = require("express").Router();
 
-const StaffRouter = Router();
-// Ensure this is your Sequelize instance
-
+// Add a student
 StaffRouter.post("/add-student", async (req: Request, res: Response) => {
   const {
     admissionNumber,
@@ -26,19 +24,47 @@ StaffRouter.post("/add-student", async (req: Request, res: Response) => {
     additionalinformation,
     _class,
     admission_date,
-  } = req.body;
-
-  const transaction = await sequelize.transaction();
+  } = req.body as {
+    admissionNumber: string;
+    name: string;
+    gender: string;
+    dateOfBirth: string;
+    contact: { address: string; email: string; phone: string };
+    guardianinfo: {
+      name: string;
+      mother: string;
+      phone: string;
+      annualIncome: number;
+    };
+    universitydetails: {
+      capId: string;
+      docNo: string;
+      nationality: string;
+      nativity: string;
+      religion: string;
+    };
+    additionalinformation: {
+      exServiceman: boolean;
+      disabilityStatus: boolean;
+      nssVolunteer: boolean;
+      aGradeInSite: boolean;
+      ihrdTssQuota: boolean;
+    };
+    _class: number;
+    admission_date: string;
+  };
 
   try {
     const student = await Student.create({
-      gender: gender,
+      gender,
       admissionNo: admissionNumber,
-      name: name,
+      name,
       admissionYear: admission_date,
       dob: dateOfBirth,
     });
+
     const guardianInfo = await GuardianInfo.create({
+      studentId: student.id,
       name: guardianinfo.name,
       mottherName: guardianinfo.mother,
       phone: guardianinfo.phone,
@@ -47,6 +73,7 @@ StaffRouter.post("/add-student", async (req: Request, res: Response) => {
     await guardianInfo.setStudent(student);
 
     const contactInfo = await Contact.create({
+      studentId: student.id,
       address: contact.address,
       email: contact.email,
       phone: contact.phone,
@@ -54,6 +81,7 @@ StaffRouter.post("/add-student", async (req: Request, res: Response) => {
     await contactInfo.setStudent(student);
 
     const additionalInfo = await AdditionalInfo.create({
+      studentId: student.id,
       exService: additionalinformation.exServiceman,
       disability: additionalinformation.disabilityStatus,
       nssVol: additionalinformation.nssVolunteer,
@@ -62,101 +90,101 @@ StaffRouter.post("/add-student", async (req: Request, res: Response) => {
     });
     await additionalInfo.setStudent(student);
 
-    const University = await universitydetails.create({
-      cap_id: universitydetails.capId,
-      doc_no: universitydetails.docNo,
+    const university = await UniversityDetail.create({
+      studentId: student.id,
+      capId: universitydetails.capId,
+      docNo: universitydetails.docNo,
       nationality: universitydetails.nationality,
       navity: universitydetails.nativity,
       religion: universitydetails.religion,
-      addmission_no: admissionNumber,
+      regNo: admissionNumber,
     });
-    await University.setStudent(student);
-    const classInfo = await Class.findOne({
-      where: {
-        id: _class,
-      },
-    });
+    await university.setStudent(student);
+
+    const classInfo = await Class.findOne({ where: { id: _class } });
     if (!classInfo) {
       return res.status(404).json({ message: "Class not found" });
     }
     await student.setClass(classInfo);
-    res
+
+    return res
       .status(201)
-      .json({ message: "Student created successfully", data: Student });
+      .json({ message: "Student created successfully", data: student });
   } catch (error) {
-    await transaction.rollback(); // Rollback the transaction in case of an error
     console.error(error);
-    res.status(500).json({ message: "Internal Server Error" });
+    return res.status(500).json({ message: "Internal Server Error", error });
   }
 });
 
+// Get all students
 StaffRouter.get("/student", async (req: Request, res: Response) => {
   try {
-    const student = await Student.findAll({
-      include: [Class, Contact, GuardianInfo, UniversityDetail, AdditionalInfo],
+    const students = await Student.findAll({
+      include: [
+        {
+          model: AdditionalInfo,
+          as: "additionalInfo",
+        },
+      ],
     });
-    if (!student) {
-      res.status(404).json({ message: "Students not found" });
-    }
 
-    const result: any = [];
-    student.forEach((element: any) => {
-      const obj = {
-        id: element.id,
-        name: " ",
-        admissionNumber: " ",
-        class: "",
-        contact: "",
-      };
-      obj.name = element.name;
-      obj.admissionNumber = element["university-info"].addmission_no;
-      obj.class = element.class.class;
-      obj.contact = element.contact.phone;
-      result.push(obj);
-    });
-    res.status(200).json({ messgae: "Students found", data: result });
+    // if (!students || students.length === 0) {
+    //   return res.status(404).json({ message: "No students found" });
+    // }
+
+    // const result = students.map((student: any) => ({
+    //   id: student.id,
+    //   name: student.name,
+    //   admissionNumber: student.admissionNo,
+    //   class: student.Class?.name || null,
+    //   contact: student.Contact?.phone || null,
+    // }));
+
+    return res.status(200).json({ message: "Students found", data: students });
   } catch (error) {
-    console.log(error);
-    res.status(500).json({ message: "Internal server error" });
+    console.error(error);
+    return res.status(500).json({ message: "Internal Server Error", error });
   }
 });
 
+// Get a specific student by ID
 StaffRouter.get("/student/:id", async (req: Request, res: Response) => {
   try {
     const id = req.params.id;
-    console.log("test");
+
     const student = await Student.findOne({
-      where: { id: id },
-      attributes: ["id", "name", "gender"],
+      where: { id },
+      attributes: ["id", "name", "gender", "admissionNo"],
       include: [
         { model: Contact, attributes: ["address", "email", "phone"] },
         {
           model: GuardianInfo,
-          attributes: ["name", "mother_name", "phone", "annual_income"],
+          attributes: ["name", "motherName", "phone", "annualIncome"],
         },
         {
           model: UniversityDetail,
           attributes: [
-            "addmission_no",
-            "cap_id",
-            "doc_no",
+            "admissionNo",
+            "capId",
+            "docNo",
             "nationality",
-            "navity",
+            "nativity",
             "religion",
           ],
         },
-        AdditionalInfo,
-        Class,
+        { model: AdditionalInfo },
+        { model: Class, attributes: ["name"] },
       ],
     });
+
     if (!student) {
-      res.status(404).json({ message: "Student not found" });
+      return res.status(404).json({ message: "Student not found" });
     }
 
-    res.status(200).json({ messgae: "Student found", data: student });
+    return res.status(200).json({ message: "Student found", data: student });
   } catch (error) {
-    console.log(error);
-    res.status(500).json({ message: "Internal server error" });
+    console.error(error);
+    return res.status(500).json({ message: "Internal Server Error", error });
   }
 });
 

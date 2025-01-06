@@ -37,7 +37,7 @@ export class FacultyRole extends Model<
   declare setFaculties: HasManySetAssociationsMixin<Faculty, number>
   declare addFaculty: HasManyAddAssociationMixin<Faculty, number>
   declare addFaculties: HasManyAddAssociationsMixin<Faculty, number>
-  declare createFaculty: HasManyCreateAssociationMixin<Faculty>
+  declare createFaculty: HasManyCreateAssociationMixin<Faculty, 'facultyRoleId'>
   declare removeFaculty: HasManyRemoveAssociationMixin<Faculty, number>
   declare removeFaculties: HasManyRemoveAssociationsMixin<Faculty, number>
   declare hasFaculty: HasManyHasAssociationMixin<Faculty, number>

@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import "tsconfig-paths/register";
-import initModels from "./src/models/index";
+import { initModels } from "./src/models/index";
 import db from "./src/db";
 import Routes from "./src/routes/index";
 // const bodyParser = require("body-parser");
@@ -16,6 +16,8 @@ dotenv.config({ path: "./.env" });
 
 try {
   initModels(db);
+  db.authenticate();
+  db.sync();
 } catch (error) {
   console.error(error);
 }
@@ -34,7 +36,5 @@ app.use(
 app.get("/", (req: Request, res: Response) => res.send("Hello World!"));
 
 app.use("/", Routes);
-
-
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));

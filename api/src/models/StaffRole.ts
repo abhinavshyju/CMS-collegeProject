@@ -37,7 +37,7 @@ export class StaffRole extends Model<
   declare setStaffs: HasManySetAssociationsMixin<Staff, number>
   declare addStaff: HasManyAddAssociationMixin<Staff, number>
   declare addStaffs: HasManyAddAssociationsMixin<Staff, number>
-  declare createStaff: HasManyCreateAssociationMixin<Staff>
+  declare createStaff: HasManyCreateAssociationMixin<Staff, 'staffRoleId'>
   declare removeStaff: HasManyRemoveAssociationMixin<Staff, number>
   declare removeStaffs: HasManyRemoveAssociationsMixin<Staff, number>
   declare hasStaff: HasManyHasAssociationMixin<Staff, number>

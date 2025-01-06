@@ -1,5 +1,3 @@
-"use client";
-
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
@@ -23,9 +21,14 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { admissionFormSchema, AdmissionFormValues } from "@/lib/shema";
-import { PostRequest } from "@/services/request";
+import { GetRequest, PostRequest } from "@/services/request";
 import { toast, ToastContainer } from "react-toastify";
+import { useEffect, useState } from "react";
 
+interface ClassType {
+  id: number;
+  class: string;
+}
 export function AdmissionForm() {
   const form = useForm<AdmissionFormValues>({
     resolver: zodResolver(admissionFormSchema),
@@ -39,6 +42,17 @@ export function AdmissionForm() {
       },
     },
   });
+  const [clsses, setClsses] = useState<ClassType[]>([]);
+  useEffect(() => {
+    const fetchClasses = async () => {
+      const response = await GetRequest("admin/util/class");
+      if (response.ok) {
+        const data = await response.json();
+        setClsses(data.data);
+      }
+    };
+    fetchClasses();
+  }, []);
 
   async function onSubmit(values: AdmissionFormValues) {
     try {
@@ -113,7 +127,6 @@ export function AdmissionForm() {
                   <SelectContent>
                     <SelectItem value="male">Male</SelectItem>
                     <SelectItem value="female">Female</SelectItem>
-                    <SelectItem value="other">Other</SelectItem>
                   </SelectContent>
                 </Select>
                 <FormMessage />
@@ -420,9 +433,10 @@ export function AdmissionForm() {
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value="bsc">Bsc</SelectItem>
-                    <SelectItem value="msc">Msc</SelectItem>
-                    <SelectItem value="btech">Btech</SelectItem>
+                    {clsses.length > 0 &&
+                      clsses.map((cls) => (
+                        <SelectItem value={`${cls.id}`}>{cls.class}</SelectItem>
+                      ))}
                   </SelectContent>
                 </Select>
                 <FormMessage />

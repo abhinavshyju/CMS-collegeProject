@@ -1,10 +1,10 @@
 import {
   Association,
-  BelongsToGetAssociationMixin,
-  BelongsToSetAssociationMixin,
-  BelongsToCreateAssociationMixin,
   CreationOptional,
   DataTypes,
+  HasOneGetAssociationMixin,
+  HasOneSetAssociationMixin,
+  HasOneCreateAssociationMixin,
   InferCreationAttributes,
   InferAttributes,
   Model,
@@ -30,11 +30,11 @@ export class UniversityDetail extends Model<
   declare createdAt: CreationOptional<Date>
   declare updatedAt: CreationOptional<Date>
 
-  // UniversityDetail belongsTo Student
+  // UniversityDetail hasOne Student
   declare student?: NonAttribute<Student>
-  declare getStudent: BelongsToGetAssociationMixin<Student>
-  declare setStudent: BelongsToSetAssociationMixin<Student, number>
-  declare createStudent: BelongsToCreateAssociationMixin<Student>
+  declare getStudent: HasOneGetAssociationMixin<Student>
+  declare setStudent: HasOneSetAssociationMixin<Student, number>
+  declare createStudent: HasOneCreateAssociationMixin<Student>
   
   declare static associations: {
     student: Association<UniversityDetail, Student>

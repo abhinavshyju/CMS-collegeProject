@@ -1,84 +1,84 @@
 import {
   Association,
+  BelongsToGetAssociationMixin,
+  BelongsToSetAssociationMixin,
+  BelongsToCreateAssociationMixin,
   CreationOptional,
   DataTypes,
-  HasOneGetAssociationMixin,
-  HasOneSetAssociationMixin,
-  HasOneCreateAssociationMixin,
   InferCreationAttributes,
   InferAttributes,
   Model,
   NonAttribute,
-  Sequelize,
-} from "sequelize";
-import type { Class } from "./Class";
-import type { SemesterTransaction } from "./SemesterTransaction";
-import type { Student } from "./Student";
+  Sequelize
+} from 'sequelize'
+import type { Class } from './Class'
+import type { SemesterTransaction } from './SemesterTransaction'
+import type { Student } from './Student'
 
-type StudentTransactionAssociations =
-  | "student"
-  | "class"
-  | "semesterTransaction";
+type StudentTransactionAssociations = 'student' | 'class' | 'semesterTransaction'
 
 export class StudentTransaction extends Model<
-  InferAttributes<StudentTransaction, { omit: StudentTransactionAssociations }>,
-  InferCreationAttributes<
-    StudentTransaction,
-    { omit: StudentTransactionAssociations }
-  >
+  InferAttributes<StudentTransaction, {omit: StudentTransactionAssociations}>,
+  InferCreationAttributes<StudentTransaction, {omit: StudentTransactionAssociations}>
 > {
-  declare id: CreationOptional<number>;
-  declare createdAt: CreationOptional<Date>;
-  declare updatedAt: CreationOptional<Date>;
+  declare id: CreationOptional<number>
+  declare studentId: number | null
+  declare classId: number | null
+  declare semesterTransactionId: number | null
+  declare createdAt: CreationOptional<Date>
+  declare updatedAt: CreationOptional<Date>
 
-  // StudentTransaction hasOne Student
-  declare student?: NonAttribute<Student>;
-  declare getStudent: HasOneGetAssociationMixin<Student>;
-  declare setStudent: HasOneSetAssociationMixin<Student, number>;
-  declare createStudent: HasOneCreateAssociationMixin<Student>;
-
-  // StudentTransaction hasOne Class
-  declare class?: NonAttribute<Class>;
-  declare getClass: HasOneGetAssociationMixin<Class>;
-  declare setClass: HasOneSetAssociationMixin<Class, number>;
-  declare createClass: HasOneCreateAssociationMixin<Class>;
-
-  // StudentTransaction hasOne SemesterTransaction
-  declare semesterTransaction?: NonAttribute<SemesterTransaction>;
-  declare getSemesterTransaction: HasOneGetAssociationMixin<SemesterTransaction>;
-  declare setSemesterTransaction: HasOneSetAssociationMixin<
-    SemesterTransaction,
-    number
-  >;
-  declare createSemesterTransaction: HasOneCreateAssociationMixin<SemesterTransaction>;
-
+  // StudentTransaction belongsTo Student
+  declare student?: NonAttribute<Student>
+  declare getStudent: BelongsToGetAssociationMixin<Student>
+  declare setStudent: BelongsToSetAssociationMixin<Student, number>
+  declare createStudent: BelongsToCreateAssociationMixin<Student>
+  
+  // StudentTransaction belongsTo Class
+  declare class?: NonAttribute<Class>
+  declare getClass: BelongsToGetAssociationMixin<Class>
+  declare setClass: BelongsToSetAssociationMixin<Class, number>
+  declare createClass: BelongsToCreateAssociationMixin<Class>
+  
+  // StudentTransaction belongsTo SemesterTransaction
+  declare semesterTransaction?: NonAttribute<SemesterTransaction>
+  declare getSemesterTransaction: BelongsToGetAssociationMixin<SemesterTransaction>
+  declare setSemesterTransaction: BelongsToSetAssociationMixin<SemesterTransaction, number>
+  declare createSemesterTransaction: BelongsToCreateAssociationMixin<SemesterTransaction>
+  
   declare static associations: {
-    student: Association<StudentTransaction, Student>;
-    class: Association<StudentTransaction, Class>;
-    semesterTransaction: Association<StudentTransaction, SemesterTransaction>;
-  };
+    student: Association<StudentTransaction, Student>,
+    class: Association<StudentTransaction, Class>,
+    semesterTransaction: Association<StudentTransaction, SemesterTransaction>
+  }
 
   static initModel(sequelize: Sequelize): typeof StudentTransaction {
-    StudentTransaction.init(
-      {
-        id: {
-          type: DataTypes.INTEGER,
-          primaryKey: true,
-          autoIncrement: true,
-          unique: true,
-        },
-        createdAt: {
-          type: DataTypes.DATE,
-        },
-        updatedAt: {
-          type: DataTypes.DATE,
-        },
+    StudentTransaction.init({
+      id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+        unique: true
       },
-      {
-        sequelize,
+      studentId: {
+        type: DataTypes.INTEGER
+      },
+      classId: {
+        type: DataTypes.INTEGER
+      },
+      semesterTransactionId: {
+        type: DataTypes.INTEGER
+      },
+      createdAt: {
+        type: DataTypes.DATE
+      },
+      updatedAt: {
+        type: DataTypes.DATE
       }
-    );
-
-    return StudentTransaction;
+    }, {
+      sequelize
+    })
+    
+    return StudentTransaction
   }
 }

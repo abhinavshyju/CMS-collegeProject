@@ -37,7 +37,7 @@ export class WorkingDay extends Model<
   declare setAttendances: HasManySetAssociationsMixin<Attendance, number>
   declare addAttendance: HasManyAddAssociationMixin<Attendance, number>
   declare addAttendances: HasManyAddAssociationsMixin<Attendance, number>
-  declare createAttendance: HasManyCreateAssociationMixin<Attendance>
+  declare createAttendance: HasManyCreateAssociationMixin<Attendance, 'workingDayId'>
   declare removeAttendance: HasManyRemoveAssociationMixin<Attendance, number>
   declare removeAttendances: HasManyRemoveAssociationsMixin<Attendance, number>
   declare hasAttendance: HasManyHasAssociationMixin<Attendance, number>

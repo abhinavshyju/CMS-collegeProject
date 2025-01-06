@@ -3,10 +3,10 @@ import FacultySubRoute from "./Faculty";
 
 const { Router } = require("express");
 
-const router = Router();
+const AdminRouter = Router();
 
-router.use("/staff", StaffSubRoute);
-router.use("/faculty", FacultySubRoute);
+AdminRouter.use("/staff", StaffSubRoute);
+AdminRouter.use("/faculty", FacultySubRoute);
 1;
 
-export default router;
+export default AdminRouter;

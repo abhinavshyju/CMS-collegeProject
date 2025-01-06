@@ -16,6 +16,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useEffect, useState } from "react";
 import { FacultyEditDialog } from "@/page/faculty/edit-faculty-dialog";
+import { URL } from "@/static";
 
 interface Faculty {
   id: string;
@@ -28,15 +29,21 @@ interface Faculty {
 export function Faculty() {
   const [value, setvalue] = useState<Faculty[]>();
   const fetchData = async () => {
-    const respones = await fetch("http://localhost:3000/admin/faculty");
+    const url = URL + "/faculty";
+    const respones = await fetch(url, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
     const data = await respones.json();
     setvalue(data.data);
+    console.log(data);
   };
 
   useEffect(() => {
     fetchData();
   }, []);
-  console.log(value);
   return (
     <Card>
       <CardHeader>

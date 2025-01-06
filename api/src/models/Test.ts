@@ -7,24 +7,24 @@ import {
   Sequelize
 } from 'sequelize'
 
-export class Semester extends Model<
-  InferAttributes<Semester>,
-  InferCreationAttributes<Semester>
+export class Test extends Model<
+  InferAttributes<Test>,
+  InferCreationAttributes<Test>
 > {
   declare id: CreationOptional<number>
-  declare semester: string | null
+  declare test: string | null
   declare createdAt: CreationOptional<Date>
   declare updatedAt: CreationOptional<Date>
   
-  static initModel(sequelize: Sequelize): typeof Semester {
-    Semester.init({
+  static initModel(sequelize: Sequelize): typeof Test {
+    Test.init({
       id: {
         type: DataTypes.INTEGER.UNSIGNED,
         primaryKey: true,
         autoIncrement: true,
         allowNull: false
       },
-      semester: {
+      test: {
         type: DataTypes.STRING
       },
       createdAt: {
@@ -37,6 +37,6 @@ export class Semester extends Model<
       sequelize
     })
     
-    return Semester
+    return Test
   }
 }

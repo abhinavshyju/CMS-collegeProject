@@ -1,7 +1,6 @@
-import StaffRoleModel from "@/models/staffRoleModel";
-import StaffModel from "@/models/staffModel";
 import { Request, Response } from "express";
 import internalServerError from "@/utils/error";
+import { Staff, StaffRole } from "@/models";
 
 const express = require("express");
 const router = express.Router();
@@ -16,8 +15,13 @@ interface staff {
 // route : /admin/staff/
 router.get("/", async (req: Request, res: Response) => {
   try {
-    const staff = await StaffModel.findAll({
-      include: StaffRoleModel,
+    const staff = await Staff.findAll({
+      include: [
+        {
+          model: StaffRole,
+          as: "staffRole",
+        },
+      ],
     });
 
     if (!staff) {
@@ -29,7 +33,7 @@ router.get("/", async (req: Request, res: Response) => {
         id: item.id,
         name: item.name,
         email: item.email,
-        role: item["staff-role"].role,
+        role: item["staffRole"].role,
       };
       result.push(obj);
     });
@@ -44,20 +48,13 @@ router.get("/", async (req: Request, res: Response) => {
 // rotue : /admin/staff/
 router.post("/", async (req: Request, res: Response) => {
   try {
-    const { name, email, password, role } = req.body;
+    const { name, email, password, role_id } = req.body;
 
-    const staff_role = await StaffRoleModel.findOne({ where: { role } });
-    if (!staff_role) {
-      res.status(404).json({ message: "Staff role is not found." });
-    }
-
-    const roleId = staff_role?.dataValues.id;
-
-    const staff = await StaffModel.create({
+    const staff = await Staff.create({
       name: name,
       email: email,
       password: password,
-      role_id: 1,
+      staffRoleId: role_id,
     });
 
     res
@@ -72,13 +69,13 @@ router.post("/", async (req: Request, res: Response) => {
 router.get("/:id", async (req: Request, res: Response) => {
   try {
     const id = req.params.id;
-    const result = await StaffModel.findOne({
+    const result = await Staff.findOne({
       where: {
         id: id,
       },
       include: [
         {
-          model: StaffRoleModel,
+          model: StaffRole,
           attributes: ["role"],
         },
       ],
@@ -92,11 +89,10 @@ router.get("/:id", async (req: Request, res: Response) => {
   }
 });
 
-
 router.patch("/:id", async (req: Request, res: Response) => {
   try {
     const id = req.params.id;
-    const result = await StaffModel.update(req.body, {
+    const result = await Staff.update(req.body, {
       where: {
         id: id,
       },

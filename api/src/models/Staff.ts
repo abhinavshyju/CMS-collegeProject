@@ -1,10 +1,10 @@
 import {
   Association,
+  BelongsToGetAssociationMixin,
+  BelongsToSetAssociationMixin,
+  BelongsToCreateAssociationMixin,
   CreationOptional,
   DataTypes,
-  HasOneGetAssociationMixin,
-  HasOneSetAssociationMixin,
-  HasOneCreateAssociationMixin,
   InferCreationAttributes,
   InferAttributes,
   Model,
@@ -23,15 +23,15 @@ export class Staff extends Model<
   declare name: string | null
   declare email: string | null
   declare password: string | null
-  declare roleId: number | null
+  declare staffRoleId: number | null
   declare createdAt: CreationOptional<Date>
   declare updatedAt: CreationOptional<Date>
 
-  // Staff hasOne StaffRole
+  // Staff belongsTo StaffRole
   declare staffRole?: NonAttribute<StaffRole>
-  declare getStaffRole: HasOneGetAssociationMixin<StaffRole>
-  declare setStaffRole: HasOneSetAssociationMixin<StaffRole, number>
-  declare createStaffRole: HasOneCreateAssociationMixin<StaffRole>
+  declare getStaffRole: BelongsToGetAssociationMixin<StaffRole>
+  declare setStaffRole: BelongsToSetAssociationMixin<StaffRole, number>
+  declare createStaffRole: BelongsToCreateAssociationMixin<StaffRole>
   
   declare static associations: {
     staffRole: Association<Staff, StaffRole>
@@ -54,7 +54,7 @@ export class Staff extends Model<
       password: {
         type: DataTypes.STRING
       },
-      roleId: {
+      staffRoleId: {
         type: DataTypes.INTEGER
       },
       createdAt: {

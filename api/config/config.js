@@ -1,7 +1,7 @@
 module.exports = {
   development: {
     dialect: "sqlite",
-    storage: process.env.SQLITE || "./tmp/db.sqlite",
+    storage: process.env.SQLITE || "./temp/data.sqlite",
   },
   test: {
     storage: process.env.SQLITE || ".tmp/data.db",
