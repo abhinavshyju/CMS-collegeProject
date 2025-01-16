@@ -32,6 +32,7 @@ export class Student extends Model<
   declare dob: string | null
   declare admissionNo: string | null
   declare admissionYear: string | null
+  declare status: boolean | null
   declare createdAt: CreationOptional<Date>
   declare updatedAt: CreationOptional<Date>
 
@@ -97,6 +98,10 @@ export class Student extends Model<
       },
       admissionYear: {
         type: DataTypes.DATEONLY
+      },
+      status: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false
       },
       createdAt: {
         type: DataTypes.DATE

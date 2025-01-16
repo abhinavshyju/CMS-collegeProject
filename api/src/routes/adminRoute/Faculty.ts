@@ -1,4 +1,4 @@
-import { Department, Faculty, FacultyRole } from "@/models";
+import { Department, Faculty, FacultyRole, User } from "@/models";
 import internalServerError from "@/utils/error";
 import { Request, Response } from "express";
 
@@ -21,6 +21,11 @@ router.post("/", async (req: Request, res: Response) => {
       password: password,
       departmentId: department_id,
       facultyRoleId: role_id,
+    });
+    const user = await User.create({
+      username: email,
+      password: password,
+      role: "faculty",
     });
     res
       .status(201)

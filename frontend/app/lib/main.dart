@@ -1,6 +1,7 @@
-import 'package:app/features/auth/login.dart';
-import 'package:app/features/home/home.dart';
+import 'package:app/features/auth/login_screen.dart';
+import 'package:app/features/layout.dart';
 import 'package:flutter/material.dart';
+import 'package:forui/forui.dart';
 
 void main() {
   runApp(const MyApp());
@@ -11,15 +12,11 @@ class MyApp extends StatelessWidget {
 
   // This widget is the root of your application.
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: HomeScreen(),
-    );
-  }
+  Widget build(BuildContext context) => MaterialApp(
+      builder: (context, child) => FTheme(
+            data: FThemes.zinc.light,
+            child: child!,
+          ),
+      // home: const AppLayout());
+      home: const SignInScreen());
 }

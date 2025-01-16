@@ -17,6 +17,8 @@ import { SemesterTransaction } from './SemesterTransaction'
 import { Attendance } from './Attendance'
 import { WorkingDay } from './WorkingDay'
 import { Test } from './Test'
+import { User } from './User'
+import { StudentForm } from './StudentForm'
 
 export {
   Admin,
@@ -36,7 +38,9 @@ export {
   SemesterTransaction,
   Attendance,
   WorkingDay,
-  Test
+  Test,
+  User,
+  StudentForm
 }
 
 export function initModels(sequelize: Sequelize) {
@@ -58,6 +62,8 @@ export function initModels(sequelize: Sequelize) {
   Attendance.initModel(sequelize)
   WorkingDay.initModel(sequelize)
   Test.initModel(sequelize)
+  User.initModel(sequelize)
+  StudentForm.initModel(sequelize)
 
   Student.belongsTo(Class, {
     as: 'class',
@@ -167,6 +173,10 @@ export function initModels(sequelize: Sequelize) {
     as: 'attendances',
     foreignKey: 'working_day_id'
   })
+  StudentForm.hasOne(Class, {
+    as: 'class',
+    foreignKey: 'student_form_id'
+  })
 
   return {
     Admin,
@@ -186,6 +196,8 @@ export function initModels(sequelize: Sequelize) {
     SemesterTransaction,
     Attendance,
     WorkingDay,
-    Test
+    Test,
+    User,
+    StudentForm
   }
 }

@@ -7,6 +7,8 @@ import AddStudents from "./pages/students/add-students";
 import ViewStudents from "./pages/students/view-students";
 import "react-toastify/dist/ReactToastify.css";
 import ViewStudent from "./pages/students/view-student";
+import CreateStudent from "./pages/students/create-student";
+import AcceptStudentTable from "./pages/students/accept-students";
 
 function App() {
   const router = createBrowserRouter([
@@ -33,6 +35,14 @@ function App() {
         {
           path: "view-students/:admissionNumber",
           element: <ViewStudent />,
+        },
+        {
+          path: "create-student",
+          element: <CreateStudent />,
+        },
+        {
+          path: "accept-student",
+          element: <AcceptStudentTable />,
         },
       ],
     },

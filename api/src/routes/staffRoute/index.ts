@@ -1,13 +1,14 @@
-import sequelize from "@/db";
 import {
   AdditionalInfo,
   Class,
   Contact,
   GuardianInfo,
   Student,
+  StudentForm,
   UniversityDetail,
+  User,
 } from "@/models";
-import express, { Request, Response, Router } from "express";
+import { Request, Response } from "express";
 
 const StaffRouter = require("express").Router();
 
@@ -106,7 +107,11 @@ StaffRouter.post("/add-student", async (req: Request, res: Response) => {
       return res.status(404).json({ message: "Class not found" });
     }
     await student.setClass(classInfo);
-
+    await User.create({
+      username: contact.email,
+      password: admissionNumber,
+      role: "student",
+    });
     return res
       .status(201)
       .json({ message: "Student created successfully", data: student });
@@ -182,6 +187,33 @@ StaffRouter.get("/student/:id", async (req: Request, res: Response) => {
     }
 
     return res.status(200).json({ message: "Student found", data: student });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Internal Server Error", error });
+  }
+});
+
+StaffRouter.post("/create-student", async (req: Request, res: Response) => {
+  try {
+    const { name, email, courseName, admissionYear, admissionNumber } =
+      req.body;
+    const course = await Class.findOne({
+      where: { class: courseName },
+    });
+    if (!course) {
+      return res.status(404).json({ message: "Course not found" });
+    }
+    const result = await StudentForm.create({
+      email: email,
+      name: name,
+      admissionNo: admissionNumber,
+      admissionYear: `${new Date(admissionYear).getFullYear()}`,
+      courseId: course.id,
+    });
+
+    return res
+      .status(201)
+      .json({ message: "Student form created successfully", data: result });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: "Internal Server Error", error });

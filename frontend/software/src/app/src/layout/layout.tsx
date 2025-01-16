@@ -5,6 +5,7 @@ import {
   SidebarRail,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
+import { Toaster } from "@/components/ui/toaster";
 import { Outlet } from "react-router-dom";
 
 const Layout = () => {
@@ -19,6 +20,7 @@ const Layout = () => {
           </header>
           <main className="flex-1 p-6 w-full">
             <Outlet />
+            <Toaster />
           </main>
         </SidebarInset>
       </div>
