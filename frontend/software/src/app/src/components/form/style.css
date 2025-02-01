@@ -1,0 +1,25 @@
+.admission-form-tabs [role="tablist"] {
+  @apply mb-4;
+}
+
+.admission-form-tabs [role="tab"] {
+  @apply text-sm font-medium transition-all;
+}
+
+.admission-form-tabs [role="tab"][data-state="active"] {
+  @apply bg-primary text-primary-foreground;
+}
+
+.admission-form .form-section {
+  @apply space-y-4;
+}
+
+.admission-form .form-row {
+  @apply grid gap-4 md:grid-cols-2;
+}
+
+@media (max-width: 640px) {
+  .admission-form-tabs [role="tablist"] {
+    @apply grid-cols-2 gap-2;
+  }
+}

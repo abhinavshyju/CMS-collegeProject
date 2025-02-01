@@ -1,4 +1,4 @@
-import 'package:app/features/route.dart';
+import 'package:app/features/faculty/route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:forui/forui.dart';

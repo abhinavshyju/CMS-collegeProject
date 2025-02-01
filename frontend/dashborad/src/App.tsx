@@ -9,6 +9,7 @@ import LoginPage from "./page/login";
 import DepartmentPage from "./page/department";
 import ClassPage from "./page/class";
 import UtilPage from "./page/uitls";
+import Semester from "./page/semester";
 
 function App() {
   const route = createBrowserRouter([
@@ -43,6 +44,10 @@ function App() {
         {
           path: "/dashboard/utils",
           element: <UtilPage />,
+        },
+        {
+          path: "/dashboard/semester",
+          element: <Semester />,
         },
       ],
     },

@@ -19,7 +19,7 @@ const sidebarItems = [
   { icon: Building, label: "Departments", href: "/dashboard/department" },
   { icon: ClipboardList, label: "Class", href: "/dashboard/class" },
   { icon: BarChart, label: "Utils", href: "/dashboard/utils" },
-  { icon: Settings, label: "Settings", href: "/settings" },
+  { icon: Settings, label: "Settings", href: "/dashboard/semester" },
 ];
 
 export function Sidebar() {

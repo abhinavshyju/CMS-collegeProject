@@ -21,7 +21,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { GetRequest, PostRequest } from "@/services/request";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -136,18 +136,37 @@ export default function CreateStudent() {
         <FormField
           control={form.control}
           name="admissionYear"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Admission Date</FormLabel>
-              <FormControl>
-                <Input type="month" placeholder="**********" {...field} />
-              </FormControl>
-              <FormDescription>
-                Select the student's admission date.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
+          render={({ field }) => {
+            // Generate a range of years (for example, from 2000 to the current year)
+            const currentYear = new Date().getFullYear();
+            const years = useMemo(() => {
+              const startYear = 2000;
+              return Array.from(
+                { length: currentYear - startYear + 1 },
+                (_, i) => startYear + i
+              );
+            }, [currentYear]);
+
+            return (
+              <FormItem>
+                <FormLabel>Admission Date</FormLabel>
+                <FormControl>
+                  <select {...field}>
+                    <option value="">Select a year</option>
+                    {years.map((year) => (
+                      <option key={year} value={year}>
+                        {year}
+                      </option>
+                    ))}
+                  </select>
+                </FormControl>
+                <FormDescription>
+                  Select the student's admission year.
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            );
+          }}
         />
         <FormField
           control={form.control}

@@ -58,7 +58,6 @@ StudentFormRouter.post(
       guardianinfo,
       universitydetails,
       additionalinformation,
-      admission_date,
     } = req.body as {
       admissionNumber: string;
       name: string;
@@ -100,7 +99,7 @@ StudentFormRouter.post(
           gender,
           admissionNo: admissionNumber,
           name,
-          admissionYear: admission_date,
+          admissionYear: formData?.admissionYear,
           dob: dateOfBirth,
         });
 

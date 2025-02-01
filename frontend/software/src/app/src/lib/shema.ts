@@ -2,6 +2,7 @@ import * as z from "zod";
 
 export const admissionFormSchema = z.object({
   admissionNumber: z.string().min(1, "Admission number is required"),
+  admissionYear: z.string().min(1, "Admission year is required"),
   name: z.string().min(1, "Name is required"),
   gender: z.enum(["male", "female", "other"]),
   dateOfBirth: z.string().min(1, "Date of birth is required"),
@@ -31,11 +32,6 @@ export const admissionFormSchema = z.object({
     ihrdTssQuota: z.boolean(),
   }),
   _class: z.string().min(1, "Class is required"),
-  parent: z.object({
-    name: z.string().min(1, "Parent name is required"),
-    email: z.string().email("Invalid email address"),
-    phone: z.string().min(10, "Phone number must be at least 10 digits"),
-  }),
 });
 
 export type AdmissionFormValues = z.infer<typeof admissionFormSchema>;

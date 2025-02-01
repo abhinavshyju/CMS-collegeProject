@@ -9,6 +9,9 @@ import "react-toastify/dist/ReactToastify.css";
 import ViewStudent from "./pages/students/view-student";
 import CreateStudent from "./pages/students/create-student";
 import AcceptStudentTable from "./pages/students/accept-students";
+import EditForm from "./pages/students/child/edit-form";
+import StudentDetailsDisplay from "./pages/students/view-student";
+import PrintPage from "./pages/students/print-page";
 
 function App() {
   const router = createBrowserRouter([
@@ -33,8 +36,8 @@ function App() {
           element: <ViewStudents />,
         },
         {
-          path: "view-students/:admissionNumber",
-          element: <ViewStudent />,
+          path: "view-students/:id",
+          element: <StudentDetailsDisplay />,
         },
         {
           path: "create-student",
@@ -43,6 +46,14 @@ function App() {
         {
           path: "accept-student",
           element: <AcceptStudentTable />,
+        },
+        {
+          path: "accept-student/:id",
+          element: <EditForm />,
+        },
+        {
+          path: "print-student/:id",
+          element: <PrintPage />,
         },
       ],
     },

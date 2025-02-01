@@ -1,5 +1,8 @@
-import { useState } from "react";
+"use client";
 
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { ExternalLink, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -9,89 +12,88 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { GetRequest } from "@/services/request";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+
 export interface Student {
   id: string;
-  admissionNo: string;
+  admissionNumber: string;
   name: string;
-  course: string;
-  verified: boolean;
 }
 
-const studentsData: Student[] = [
-  {
-    id: "1",
-    admissionNo: "A001",
-    name: "John Doe",
-    course: "Computer Science",
-    verified: false,
-  },
-  {
-    id: "2",
-    admissionNo: "A002",
-    name: "Jane Smith",
-    course: "Engineering",
-    verified: false,
-  },
-  {
-    id: "3",
-    admissionNo: "A003",
-    name: "Bob Johnson",
-    course: "Mathematics",
-    verified: true,
-  },
-  {
-    id: "4",
-    admissionNo: "A004",
-    name: "Alice Williams",
-    course: "Physics",
-    verified: false,
-  },
-  {
-    id: "5",
-    admissionNo: "A005",
-    name: "Charlie Brown",
-    course: "Chemistry",
-    verified: true,
-  },
-];
-
 export default function AcceptStudentTable() {
-  const [students, setStudents] = useState<Student[]>(studentsData);
+  const [students, setStudents] = useState<Student[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const handleVerify = (id: string) => {
-    setStudents(
-      students.map((student) =>
-        student.id === id ? { ...student, verified: true } : student
-      )
-    );
+  const getData = async () => {
+    setIsLoading(true);
+    try {
+      const response = await GetRequest("staff/students-accept");
+      if (response.status === 200) {
+        const data = await response.json();
+        setStudents(data.data);
+      }
+    } catch (error) {
+      console.error("Failed to fetch students:", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
+  useEffect(() => {
+    getData();
+  }, []);
+
   return (
-    <Table>
-      <TableHeader>
-        <TableRow>
-          <TableHead>Admission No</TableHead>
-          <TableHead>Name</TableHead>
-          <TableHead>Course</TableHead>
-          <TableHead>Action</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {students.map((student) => (
-          <TableRow key={student.id}>
-            <TableCell>{student.admissionNo}</TableCell>
-            <TableCell>{student.name}</TableCell>
-            <TableCell>{student.course}</TableCell>
-            <TableCell>
-              {student.verified ? (
-                <span className="text-green-600 font-medium">Verified</span>
+    <Card className="w-full">
+      <CardHeader>
+        <CardTitle className="text-2xl font-bold">Student Admissions</CardTitle>
+      </CardHeader>
+      <CardContent>
+        {isLoading ? (
+          <div className="flex justify-center items-center h-48">
+            <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          </div>
+        ) : (
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="w-[180px]">Admission No</TableHead>
+                <TableHead>Name</TableHead>
+                <TableHead className="text-right">Action</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {students.length === 0 ? (
+                <TableRow>
+                  <TableCell
+                    colSpan={3}
+                    className="text-center h-24 text-muted-foreground"
+                  >
+                    No students found
+                  </TableCell>
+                </TableRow>
               ) : (
-                <Button onClick={() => handleVerify(student.id)}>Verify</Button>
+                students.map((student) => (
+                  <TableRow key={student.id}>
+                    <TableCell className="font-medium">
+                      {student.admissionNumber}
+                    </TableCell>
+                    <TableCell>{student.name}</TableCell>
+                    <TableCell className="text-right">
+                      <Button variant="ghost" asChild>
+                        <Link to={`${student.admissionNumber}`}>
+                          Open <ExternalLink className="ml-2 h-4 w-4" />
+                        </Link>
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))
               )}
-            </TableCell>
-          </TableRow>
-        ))}
-      </TableBody>
-    </Table>
+            </TableBody>
+          </Table>
+        )}
+      </CardContent>
+    </Card>
   );
 }

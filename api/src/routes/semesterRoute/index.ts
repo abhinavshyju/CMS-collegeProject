@@ -10,6 +10,23 @@ import { Request, Response } from "express";
 
 const SemesterRouter = require("express").Router();
 
+SemesterRouter.get("/", async (req: Request, res: Response) => {
+  try {
+    const result = await Semester.findAll();
+    res.status(200).json({ message: "Semester list", data: result });
+  } catch (error) {
+    internalServerError(res);
+  }
+});
+
+SemesterRouter.get("/getSemesterT", async (req: Request, res: Response) => {
+  try {
+    const result = await SemesterTransaction.findAll({});
+    res.status(200).json({ message: "Semester list", data: result });
+  } catch (error) {
+    internalServerError(res);
+  }
+});
 SemesterRouter.post("/setSemester", async (req: Request, res: Response) => {
   try {
     const { semester_id, start_date, end_date, admission_date } = req.body;

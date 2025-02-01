@@ -150,6 +150,7 @@ AuthRouter.post("/student-login", async (req: Request, res: Response) => {
 });
 AuthRouter.post("/app-login", async (req: Request, res: Response) => {
   const { username, password } = req.body;
+  console.log("test");
 
   try {
     const result = await User.findOne({

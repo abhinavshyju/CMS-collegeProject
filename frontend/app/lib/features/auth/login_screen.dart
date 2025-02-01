@@ -1,4 +1,5 @@
 import 'package:app/components/faculty_layout.dart';
+import 'package:app/components/student_layout.dart';
 import 'package:app/sequlizer/Auth.dart';
 import 'package:app/service/request.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +10,6 @@ class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
 
   @override
-  // ignore: library_private_types_in_public_api
   _SignInScreenState createState() => _SignInScreenState();
 }
 
@@ -18,15 +18,14 @@ class _SignInScreenState extends State<SignInScreen> {
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _obscureText = true;
+
   void getRole() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
     final role = pref.getString("role");
     print(role);
     if (role == "faculty") {
       Navigator.pop(context);
-      Navigator.push(
-          // ignore: use_build_context_synchronously
-          context,
+      Navigator.push(context,
           MaterialPageRoute(builder: (context) => const FacultyAppLayout()));
     }
   }
@@ -78,12 +77,18 @@ class _SignInScreenState extends State<SignInScreen> {
         await pref.setString("role", authData.data.role);
         await pref.setInt("id", authData.data.id);
         await pref.setString("token", authData.data.token);
+
         if (authData.data.role == "faculty") {
-          Navigator.push(
-              // ignore: use_build_context_synchronously
+          Navigator.pushReplacement(
               context,
               MaterialPageRoute(
                   builder: (context) => const FacultyAppLayout()));
+        }
+        if (authData.data.role == "student") {
+          Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => const StudentAppLayout()));
         }
       } catch (e) {
         print(e);
@@ -94,7 +99,7 @@ class _SignInScreenState extends State<SignInScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.black,
       body: SafeArea(
         child: LayoutBuilder(
           builder: (context, constraints) {
@@ -103,17 +108,11 @@ class _SignInScreenState extends State<SignInScreen> {
               child: Column(
                 children: [
                   SizedBox(height: constraints.maxHeight * 0.1),
-                  // Image.network(
-                  //   "https://i.postimg.cc/nz0YBQcH/Logo-light.png",
-                  //   height: 100,
-                  // ),
                   SizedBox(height: constraints.maxHeight * 0.1),
                   Text(
                     "Sign In",
-                    style: Theme.of(context)
-                        .textTheme
-                        .headlineSmall!
-                        .copyWith(fontWeight: FontWeight.bold),
+                    style: Theme.of(context).textTheme.headlineSmall!.copyWith(
+                        fontWeight: FontWeight.bold, color: Colors.white),
                   ),
                   SizedBox(height: constraints.maxHeight * 0.05),
                   Form(
@@ -122,13 +121,15 @@ class _SignInScreenState extends State<SignInScreen> {
                       children: [
                         TextFormField(
                           controller: _usernameController,
-                          decoration: const InputDecoration(
+                          style: const TextStyle(color: Colors.white),
+                          decoration: InputDecoration(
                             hintText: 'Username',
+                            hintStyle: const TextStyle(color: Colors.grey),
                             filled: true,
-                            fillColor: Color(0xFFF5FCF9),
-                            contentPadding: EdgeInsets.symmetric(
+                            fillColor: Colors.grey[850],
+                            contentPadding: const EdgeInsets.symmetric(
                                 horizontal: 16.0 * 1.5, vertical: 16.0),
-                            border: OutlineInputBorder(
+                            border: const OutlineInputBorder(
                               borderSide: BorderSide.none,
                               borderRadius:
                                   BorderRadius.all(Radius.circular(20)),
@@ -142,11 +143,13 @@ class _SignInScreenState extends State<SignInScreen> {
                           child: TextFormField(
                             controller: _passwordController,
                             obscureText: _obscureText,
+                            style: const TextStyle(color: Colors.white),
                             validator: _validatePassword,
                             decoration: InputDecoration(
                               hintText: 'Password',
+                              hintStyle: const TextStyle(color: Colors.grey),
                               filled: true,
-                              fillColor: const Color(0xFFF5FCF9),
+                              fillColor: Colors.grey[850],
                               contentPadding: const EdgeInsets.symmetric(
                                   horizontal: 16.0 * 1.5, vertical: 16.0),
                               border: const OutlineInputBorder(
@@ -167,7 +170,11 @@ class _SignInScreenState extends State<SignInScreen> {
                           ),
                         ),
                         FButton(
-                            onPress: _submitForm, label: const Text("Sign in")),
+                          onPress: _submitForm,
+                          label: const Text(
+                            "Sign in",
+                          ),
+                        ),
                         const SizedBox(height: 16.0),
                       ],
                     ),

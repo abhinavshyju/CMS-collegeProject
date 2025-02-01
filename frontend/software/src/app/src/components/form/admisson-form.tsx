@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -23,7 +24,7 @@ import { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { admissionFormSchema, AdmissionFormValues } from "@/lib/shema";
 import { GetRequest, PostRequest } from "@/services/request";
 import { toast, ToastContainer } from "react-toastify";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 interface ClassType {
   id: number;
@@ -95,6 +96,41 @@ export function AdmissionForm() {
                 <FormMessage />
               </FormItem>
             )}
+          />{" "}
+          <FormField
+            control={form.control}
+            name="admissionYear"
+            render={({ field }) => {
+              // Generate a range of years (for example, from 2000 to the current year)
+              const currentYear = new Date().getFullYear();
+              const years = useMemo(() => {
+                const startYear = 2000;
+                return Array.from(
+                  { length: currentYear - startYear + 1 },
+                  (_, i) => startYear + i
+                );
+              }, [currentYear]);
+
+              return (
+                <FormItem>
+                  <FormLabel>Admission Date</FormLabel>
+                  <FormControl>
+                    <select {...field}>
+                      <option value="">Select a year</option>
+                      {years.map((year) => (
+                        <option key={year} value={year}>
+                          {year}
+                        </option>
+                      ))}
+                    </select>
+                  </FormControl>
+                  <FormDescription>
+                    Select the student's admission year.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              );
+            }}
           />
           <FormField
             control={form.control}
@@ -448,51 +484,6 @@ export function AdmissionForm() {
         <CardHeader>
           <CardTitle className="text-xl ">Parent Information</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <FormField
-            control={form.control}
-            name="parent.name"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Parent Name</FormLabel>
-                <FormControl>
-                  <Input placeholder="Enter parent name" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="parent.email"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Parent Email</FormLabel>
-                <FormControl>
-                  <Input
-                    type="email"
-                    placeholder="Enter parent email"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="parent.phone"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Parent Phone</FormLabel>
-                <FormControl>
-                  <Input placeholder="Enter parent phone number" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </CardContent>
 
         <div className="flex justify-end col-span-full pr-4">
           <Button type="submit">Submit Application</Button>

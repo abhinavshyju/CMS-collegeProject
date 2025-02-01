@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 // ignore: constant_identifier_names
-const String URL = "http://192.168.1.4:3000";
+const String URL = "http://192.168.1.3:3000";
 
 /// A reusable function for making GET requests
 Future<dynamic> makeGetRequest(String url,
@@ -46,7 +46,7 @@ Future<dynamic> makePostRequest(
       headers: headers ??
           {
             'Content-Type': 'application/json',
-            "token": token!,
+            "token": token ?? "test",
             "id": id.toString()
           },
       body: body != null ? jsonEncode(body) : null,

@@ -22,10 +22,15 @@ import { useNavigate } from "react-router-dom";
 // import { array } from "zod";
 
 interface studentType {
-  admissionNumber: string;
+  id: string;
+  admissionNo: string;
   name: string;
-  class: string;
-  contact: string;
+  class: {
+    class: string;
+  };
+  contact: {
+    phone: string;
+  };
 }
 
 const ViewStudents = () => {
@@ -71,16 +76,14 @@ const ViewStudents = () => {
             <TableRow key={index}>
               <TableCell>{index + 1}</TableCell>
               <TableCell>{student.name}</TableCell>
-              <TableCell>{student.admissionNumber}</TableCell>
-              <TableCell>{student.class}</TableCell>
-              <TableCell>{student.contact}</TableCell>
+              <TableCell>{student.admissionNo}</TableCell>
+              <TableCell>{student.class.class}</TableCell>
+              <TableCell>{student.contact.phone}</TableCell>
               <TableCell>
                 <Button
                   variant="outline"
                   onClick={() =>
-                    navigate(
-                      `/dashboard/view-students/${student.admissionNumber}`
-                    )
+                    navigate(`/dashboard/view-students/${student.id}`)
                   }
                 >
                   View

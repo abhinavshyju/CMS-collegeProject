@@ -52,7 +52,7 @@ class AppTypography {
     return TextStyle(
       fontSize: 16.0,
       fontWeight: FontWeight.w500,
-      color: Theme.of(context).colorScheme.onBackground.withOpacity(0.7),
+      color: Theme.of(context).cardColor.withOpacity(0.7),
     );
   }
 
@@ -61,7 +61,7 @@ class AppTypography {
     return TextStyle(
       fontSize: 14.0,
       fontWeight: FontWeight.normal,
-      color: Theme.of(context).colorScheme.onBackground,
+      color: Theme.of(context).cardColor,
     );
   }
 
@@ -69,7 +69,7 @@ class AppTypography {
     return TextStyle(
       fontSize: 12.0,
       fontWeight: FontWeight.normal,
-      color: Theme.of(context).colorScheme.onBackground,
+      color: Theme.of(context).cardColor,
     );
   }
 
@@ -78,7 +78,7 @@ class AppTypography {
     return TextStyle(
       fontSize: 10.0,
       fontWeight: FontWeight.normal,
-      color: Theme.of(context).colorScheme.onBackground.withOpacity(0.5),
+      color: Theme.of(context).cardColor.withOpacity(0.5),
     );
   }
 
@@ -96,7 +96,7 @@ class AppTypography {
     return TextStyle(
       fontSize: 10.0,
       fontWeight: FontWeight.w400,
-      color: Theme.of(context).colorScheme.onBackground.withOpacity(0.5),
+      color: Theme.of(context).cardColor.withOpacity(0.5),
       letterSpacing: 1.5,
     );
   }
@@ -112,7 +112,7 @@ class AppTypography {
     return TextStyle(
       fontSize: fontSize ?? 14.0,
       fontWeight: fontWeight ?? FontWeight.normal,
-      color: color ?? Theme.of(context).colorScheme.onBackground,
+      color: color ?? Theme.of(context).cardColor,
       letterSpacing: letterSpacing ?? 0.0,
     );
   }
